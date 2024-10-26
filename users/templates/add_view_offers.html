@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% block content %}
+    <div class="container ms-2 mt-4">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb fs-4">
+                <li class="breadcrumb-item">
+                    <a href="{% url 'home' %}" class="text-decoration-none text-black"><i class="bi bi-house-door-fill"></i></a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">All Offers</li>
+            </ol>
+        </nav>
+    </div>
+    {% if request.user.role == "SHOP OWNER" %}
+        <div class="d-grid gap-2 d-md-flex justify-content-md-end me-4">
+            <!-- Button trigger modal -->
+            <button type="button"
+                    class="btn btn-primary btn-primary"
+                    data-bs-toggle="modal"
+                    data-bs-target="#exampleModal">Add Offers</button>
+            <!-- Modal -->
+            <div class="modal fade"
+                 id="exampleModal"
+                 tabindex="-1"
+                 aria-labelledby="exampleModalLabel"
+                 aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="exampleModalLabel">Offers</h1>
+                            <button type="button"
+                                    class="btn-close"
+                                    data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                        </div>
+                        <form action="{% url 'add_offers' %}" method="post">
+                            {% csrf_token %}
+                            <div class="modal-body">{{ form.as_p }}</div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary btn-sm">Add Offers</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+    <div class="container">
+        {% if all_offers %}
+            {% for all_offer in all_offers %}
+                <div class="alert alert-primary" role="alert">
+                    Dog Care--{{ all_offer.offers }}--{{ all_offer.time }}
+                    {% if request.user.role == "SHOP OWNER" %}
+                        <button type="button"
+                                class="btn btn-primary btn-danger btn-sm"
+                                data-bs-toggle="modal"
+                                data-bs-target="#exampleModalLabel{{ all_offer.id }}">Delete</button>
+                    {% endif %}
+                </div>
+                <!-- Modal -->
+                <div class="modal fade"
+                     id="exampleModalLabel{{ all_offer.id }}"
+                     tabindex="-1"
+                     aria-labelledby="exampleModalLabel{{ all_offer.id }}"
+                     aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="exampleModalLabel{{ all_offer.id }}">Delete</h1>
+                                <button type="button"
+                                        class="btn-close"
+                                        data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">Are you sure You wnat to Delete</div>
+                            <div class="modal-footer">
+                                <a href="{% url 'delete_offers' all_offer.id %}">
+                                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-warning" role="alert">Currently No New Offers</div>
+    {% endif %}
+{% endblock content %}

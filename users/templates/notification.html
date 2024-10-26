@@ -1,0 +1,32 @@
+
+{% extends "base.html" %}
+{% block content %}
+    <div class="container ms-2 mt-4">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb fs-4">
+                <li class="breadcrumb-item">
+                    <a href="{% url 'home' %}" class="text-decoration-none text-black"><i class="bi bi-house-door-fill"></i></a>
+                </li>
+
+                <li class="breadcrumb-item active" aria-current="page">Notification</li>
+            </ol>
+        </nav>
+    </div>
+    <div class="container">
+        {% if all_notifications %}
+        {% for all_notification in all_notifications%}
+        <div class="alert alert-primary" role="alert">
+       {{all_notification.username}}--{{all_notification.notification}}--{{all_notification.time}} 
+
+          </div>
+          {% comment %} <a href="{% url ''%}" {% endcomment %}
+          {% endfor %}
+    </div>
+    {% comment %} {% endif %} {% endcomment %}
+    {% else %}
+    <div class="alert alert-warning" role="alert">
+        Currently No Notification
+      </div>
+      {% endif %}
+      
+    {% endblock content%}

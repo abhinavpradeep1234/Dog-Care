@@ -1,0 +1,146 @@
+{% extends "base.html" %}
+{% block content %}
+    <div class="container mt-4 ms-4">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb fs-4">
+                <li class="breadcrumb-item">
+                    <a href="{% url 'home' %}" class="text-decoration-none text-black"><i class="bi bi-house-door-fill"></i></a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">{{ page_title }}</li>
+            </ol>
+        </nav>
+    </div>
+    <div class="d-grid gap-2 d-md-flex justify-content-md-end me-4 mt-2">
+        <a href="{% url 'add_doctors_checkup_details' %}">
+            <button class="btn btn-primary me-md-2 btn-sm mt-2" type="button">Add Doctors</button>
+        </a>
+        <a href="{% url 'add_token_checkup_details' %}">
+            <button class="btn btn-primary btn-sm mt-2" type="button">Add Tokens</button>
+        </a>
+    </div>
+    <!-- Row to hold both tables -->
+    <div class="container mt-4">
+        <div class="row">
+            <!-- Left Table (Doctors) -->
+            <div class="col-md-6">
+                <h5 class="text-center">Doctors Details</h5>
+                {% if all_doctors %}
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped table-hover">
+                            <thead>
+                                <tr class="text-center">
+                                    <th>Doctor's Name</th>
+                                    <th colspan=2>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for all_doctor in all_doctors %}
+                                    <tr class="text-center">
+                                        <td>{{ all_doctor.doctor_name }}</td>
+                                        <td>
+                                            <a href="{% url 'update_doctors_checkup_details' all_doctor.id %}">
+                                                <button type="submit" class="btn btn-success btn-sm">Update</button>
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <button type="button"
+                                                    class="btn btn-danger btn-sm"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#exampleModal{{ all_doctor.id }}">Delete</button>
+                                        </td>
+                                    </tr>
+                                    <!-- Modal -->
+                                    <div class="modal fade"
+                                         id="exampleModal{{ all_doctor.id }}"
+                                         tabindex="-1"
+                                         aria-labelledby="exampleModal{{ all_doctor.id }}"
+                                         aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h1 class="modal-title fs-5" id="exampleModal{{ all_doctor.id }}">Delete</h1>
+                                                    <button type="button"
+                                                            class="btn-close"
+                                                            data-bs-dismiss="modal"
+                                                            aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">Are You Sure You Want to Delete</div>
+                                                <div class="modal-footer">
+                                                    <a href="{% url 'delete_doctors_checkup_details' all_doctor.id %}">
+                                                        <button type="button" class="btn btn-Danger btn-sm">Confirm Delete</button>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="alert alert-primary text-center" role="alert">Currently No Doctors Added</div>
+                {% endif %}
+            </div>
+            <!-- Right Table (Tokens) -->
+            <div class="col-md-6">
+                <h5 class="text-center">Token Details</h5>
+                {% if all_tokens %}
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped table-hover">
+                            <thead>
+                                <tr class="text-center">
+                                    <th>Token</th>
+                                    <th colspan=2>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for all_token in all_tokens %}
+                                    <tr class="text-center">
+                                        <td>{{ all_token.Token }}</td>
+                                        <td>
+                                            <a href="{% url 'update_token_checkup_details' all_token.id %}">
+                                                <button type="submit" class="btn btn-success btn-sm">Update</button>
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <button type="button"
+                                                    class="btn btn-danger btn-sm"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#exampleModal{{ all_token.id }}">Delete</button>
+                                        </td>
+                                    </tr>
+                                    <!-- Modal -->
+                                    <div class="modal fade"
+                                         id="exampleModal{{ all_token.id }}"
+                                         tabindex="-1"
+                                         aria-labelledby="exampleModal{{ all_token.id }}"
+                                         aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h1 class="modal-title fs-5" id="exampleModal{{ all_token.id }}">Delete</h1>
+                                                    <button type="button"
+                                                            class="btn-close"
+                                                            data-bs-dismiss="modal"
+                                                            aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">Are You Sure You Want to Delete</div>
+                                                <div class="modal-footer">
+                                                    <a href="{% url 'delete_token_checkup_details' all_token.id %}">
+                                                        <button type="button" class="btn btn-Danger btn-sm">Confirm Delete</button>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="alert alert-primary text-center" role="alert">Currently No Tokens Added</div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock content %}
