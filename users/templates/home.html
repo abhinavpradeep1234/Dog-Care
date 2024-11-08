@@ -1,102 +1,221 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Left Side Offcanvas Menu</title>
-        <!-- Bootstrap CSS -->
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
-              rel="stylesheet">
-        <style>
-        /* Custom styling to enhance the appearance of the offcanvas */
-        .offcanvas-start {
-            width: 250px;
-        }
-        </style>
-    </head>
-    <body>
-        <!-- Navbar (Top) -->
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-            <div class="container-fluid">
-                <!-- Button to toggle the offcanvas -->
-                <button class="btn btn-outline-light me-2"
-                        type="button"
-                        data-bs-toggle="offcanvas"
-                        data-bs-target="#offcanvasMenu"
-                        aria-controls="offcanvasMenu">
-                    <i class="bi bi-list"></i> Menu
-                </button>
-                <a class="navbar-brand" href="#">MyBrand</a>
-                <button class="navbar-toggler"
-                        type="button"
-                        data-bs-toggle="collapse"
-                        data-bs-target="#navbarNav"
-                        aria-controls="navbarNav"
-                        aria-expanded="false"
-                        aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <!-- Right-side menu in navbar -->
-                <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav ms-auto">
-                        <li class="nav-item">
-                            <a class="nav-link active" href="#">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">About</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Services</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Contact</a>
-                        </li>
-                    </ul>
+{% load static%}
+<head>
+    <meta charset="utf-8">
+    <title>Dog Care-{{page_title}}</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="Free HTML Templates" name="keywords">
+    <meta content="Free HTML Templates" name="description">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/js/all.min.js" integrity="sha512-xD+V5BHG5jxaCZQjD7X8luyIB9YdM+5PfKfD0ZxxwV/b4S4YcsQdqX9GF1kqM1o5FwbrcCFf8t3zR4Hbc1F8A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <!-- Favicon -->
+    {% comment %} <link href="{% static 'img/1.png' %}" rel="icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-xD+V5BHG5jxaCZQjD7X8luyIB9YdM+5PfKfD0ZxxwV/b4S4YcsQdqX9GF1kqM1o5FwbrcCFf8t3zR4Hbc1F8A==" crossorigin="anonymous" referrerpolicy="no-referrer" /> {% endcomment %}
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins&family=Roboto:wght@700&display=swap" rel="stylesheet">  
+
+    <!-- Icon Font Stylesheet -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="lib/flaticon/font/flaticon.css" rel="stylesheet">
+
+    <!-- Libraries Stylesheet -->
+    <link href="{% static 'lib/owlcarousel/assets/owl.carousel.min.css' %}" rel="stylesheet">
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+
+    <!-- Template Stylesheet -->
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+</head>
+
+<body>
+    <!-- Topbar Start -->
+   
+    <!-- Topbar End -->
+
+
+    <!-- Navbar Start -->
+    <nav class="navbar navbar-expand-lg bg-white navbar-light shadow-sm py-3 py-lg-0 px-3 px-lg-0">
+        <a href="index.html" class="navbar-brand ms-lg-5">
+            {% comment %} <h1 class="m-0 text-uppercase text-dark"><i class="fa-solid fa-paw"></i>Dog Care</h1> {% endcomment %}
+            <h1 class="m-0 text-uppercase text-dark">
+                <img src="{% static 'img/1.png'%}" alt="Rounded Image" class="rounded-circle mt-2" width="100" height="100">
+ Dog Care</h1>
+
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+            <div class="navbar-nav ms-auto py-0">
+                <a href="index.html" class="nav-item nav-link active">Home</a>
+                <a href="#about" class="nav-item nav-link">About</a>
+                <a href="{% url 'dashboard'%}" class="nav-item nav-link">Dashboard</a>
+                <a href="product.html" class="nav-item nav-link">Product</a>
+                <div class="nav-item dropdown">
+                    <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Pages</a>
+                    <div class="dropdown-menu m-0">
+                        <a href="price.html" class="dropdown-item">Pricing Plan</a>
+                        <a href="team.html" class="dropdown-item">The Team</a>
+                        <a href="testimonial.html" class="dropdown-item">Testimonial</a>
+                        <a href="blog.html" class="dropdown-item">Blog Grid</a>
+                        <a href="detail.html" class="dropdown-item">Blog Detail</a>
+                    </div>
+                </div>
+                <a href="contact.html" class="nav-item nav-link nav-contact bg-primary text-white px-5 ms-lg-5">Contact <i class="bi bi-arrow-right"></i></a>
+            </div>
+        </div>
+    </nav>
+    <!-- Navbar End -->
+
+
+    <!-- Hero Start -->
+    <div class="container-fluid bg-primary py-5 mb-5 hero-header">
+        <div class="container py-5">
+            <div class="row justify-content-start">
+                <div class="col-lg-8 text-center text-lg-start">
+                    <h1 class="display-1 text-uppercase text-dark mb-lg-4">Dog Care</h1>
+                    <h1 class="text-uppercase text-white mb-lg-4">Make Your Dogs Happy</h1>
+                    <p class="fs-4 text-white mb-lg-4">The best care, guidance, and love for your furry friend. Discover expert tips, health advice, and personalized support to keep your dog happy, healthy, and thriving every day!"</p>
+                    <div class="d-flex align-items-center justify-content-center justify-content-lg-start pt-5">
+                        <a href="" class="btn btn-outline-light border-2 py-md-3 px-md-5 me-5">Read More</a>
+
+                    </div>
                 </div>
             </div>
-        </nav>
-        <!-- Offcanvas Sidebar (Left) -->
-        <div class="offcanvas offcanvas-start bg-dark text-white"
-             tabindex="-1"
-             id="offcanvasMenu"
-             aria-labelledby="offcanvasMenuLabel">
-            <div class="offcanvas-header">
-                <h5 class="offcanvas-title" id="offcanvasMenuLabel">Menu</h5>
-                <button type="button"
-                        class="btn-close text-reset"
-                        data-bs-dismiss="offcanvas"
-                        aria-label="Close"></button>
-            </div>
-            <div class="offcanvas-body">
-                <ul class="nav flex-column">
-                    <li class="nav-item">
-                        <a class="nav-link active" href="{% url 'dashboard' %}">dashboard</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-white" href="#">Offers</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-white" href="{% url 'home' %}">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-white" href="#">Analytics</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-white" href="#">Settings</a>
-                    </li>
-                </ul>
+        </div>
+    </div>
+ 
+
+    <!-- Hero End -->
+
+
+
+
+    <!-- About Start -->
+    <section id="about">
+
+    <div class="container-fluid py-5">
+        <div class="container">
+            <div class="row gx-5">
+                <div class="col-lg-5 mb-5 mb-lg-0" style="min-height: 500px;">
+                    <div class="position-relative h-100">
+                        <img class="position-absolute w-100 h-100 ms-4" src="{% static 'img/blog-1.jpg' %}" style="object-fit: cover;">
+
+                    </div>
+                </div>
+                <div class="col-lg-7">
+
+                    <div class="border-start border-5 border-primary ps-5 mb-5">
+                        <h1 class="text-primary text-uppercase">About Us</h1>
+
+                    </div>
+                    <div class="bg-light p-4">
+                        <ul class="nav nav-pills justify-content-between mb-3" id="pills-tab" role="tablist">
+                            <li class="nav-item w-50" role="presentation">
+                            </li>
+                            <li class="nav-item w-50" role="presentation">
+                            
+                            </li>
+                        </ul>
+                        <div class="tab-content" id="pills-tabContent">
+                            <div class="tab-pane fade show active" id="pills-1" role="tabpanel" aria-labelledby="pills-1-tab">
+                                <p class="mb-0">Welcome to Dog Care – your one-stop platform dedicated to the well-being of your furry friends! Our mission is to provide dog owners with convenient access to quality care, nutritious food, and top-notch accessories, all tailored to meet the unique needs of your pets.
+
+                                    With Dog Care, you can easily book services like grooming, veterinary consultations, and training sessions through our user-friendly platform. We understand the importance of health, happiness, and a comfortable environment for your pet, so we offer a curated selection of premium dog food and essential accessories. From cozy beds and stylish collars to nutritious meals that keep tails wagging, Dog Care is here to support every aspect of your dog's life.
+                                    
+                                    Join us on this journey to keep your pet healthy, happy, and well-loved – because every dog deserves the best!
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    </p>
+                            </div>
+                            <div class="tab-pane fade" id="pills-2" role="tabpanel" aria-labelledby="pills-2-tab">
+                                {% comment %} <p class="mb-0">Tempor erat elitr at rebum at at clita aliquyam consetetur. Diam dolor diam ipsum et, tempor voluptua sit consetetur sit. Aliquyam diam amet diam et eos sadipscing labore. Clita erat ipsum et lorem et sit, sed stet no labore lorem sit. Sanctus clita duo justo et tempor consetetur takimata eirmod, dolores takimata consetetur invidunt magna dolores aliquyam dolores dolore. Amet erat amet et magna</p> {% endcomment %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-        <!-- Main content to simulate scrolling -->
-        <div class="container mt-5 pt-5">
-            <h1>Welcome to My Professional Dashboard</h1>
-            <p>This is the main content area. The offcanvas menu is hidden by default but can be toggled from the left side.</p>
-            <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla vel lacus id odio bibendum tristique at eget orci.
-            </p>
-            <p>More content here...</p>
+    </div>
+</section>
+    <!-- About End -->
+    
+
+
+    
+
+    <!-- Footer Start -->
+    <div class="container-fluid bg-dark mt-2">
+        <div class="container pt-5">
+            <div class="row g-5">
+                <div class="col-lg-3 col-md-6">
+                    <h5 class="text-uppercase border-start border-5 border-primary ps-3 mb-4 text-white">Dog Care</h5>
+                    <p class="mb-4">No dolore ipsum accusam no lorem. Invidunt sed clita kasd clita et et dolor sed dolor</p>
+                    <p class="mb-2"><i class="bi bi-geo-alt text-primary me-2"></i>123 Street, New York, USA</p>
+                    <p class="mb-2"><i class="bi bi-envelope-open text-primary me-2"></i>dogcare@gmail.com</p>
+                    <p class="mb-0"><i class="bi bi-telephone text-primary me-2"></i>+012 345 67890</p>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <h5 class="text-uppercase border-start border-5 border-primary ps-3 mb-4 text-white">Quick Links</h5>
+                    <div class="d-flex flex-column justify-content-start">
+                        <a class="text-body mb-2" href="#"><i class="bi bi-arrow-right text-primary me-2"></i>Home</a>
+                        <a class="text-body mb-2" href="#"><i class="bi bi-arrow-right text-primary me-2"></i>About Us</a>
+                        <a class="text-body mb-2" href="#"><i class="bi bi-arrow-right text-primary me-2"></i>Our Services</a>
+                        <a class="text-body mb-2" href="#"><i class="bi bi-arrow-right text-primary me-2"></i>Meet The Team</a>
+                        <a class="text-body mb-2" href="#"><i class="bi bi-arrow-right text-primary me-2"></i>Latest Blog</a>
+                        <a class="text-body" href="#"><i class="bi bi-arrow-right text-primary me-2"></i>Contact Us</a>
+                    </div>
+                </div>
+
+               
+                    <h6 class="text-uppercase mt-4 mb-3">Follow Us</h6>
+                    <div class="d-flex">
+                        <a class="btn btn-outline-primary btn-square me-2" href="#"><i class="bi bi-twitter"></i></a>
+                        <a class="btn btn-outline-primary btn-square me-2" href="#"><i class="bi bi-facebook"></i></a>
+                        <a class="btn btn-outline-primary btn-square me-2" href="#"><i class="bi bi-linkedin"></i></a>
+                        <a class="btn btn-outline-primary btn-square" href="#"><i class="bi bi-instagram"></i></a>
+                    </div>
+                </div>
+                
+            </div>
         </div>
-        <!-- Bootstrap JS -->
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    </body>
+    </div>
+    <div class="container-fluid bg-dark text-white-50 py-4">
+        <div class="container">
+            <div class="row g-5">
+                <div class="col-md-6 text-center text-md-start">
+                    <p class="mb-md-0">&copy; <a class="text-white" href="#">Dog Care</a>. All Rights Reserved.</p>
+                </div>
+                <div class="col-md-6 text-center text-md-end">
+                    <p class="mb-0">Designed by <a class="text-white" href="#">SmartDevelopers@.com</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Footer End -->
+
+
+    <!-- Back to Top -->
+    <a href="#" class="btn btn-primary py-3 fs-4 back-to-top"><i class="bi bi-arrow-up"></i></a>
+
+
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{% static 'lib/easing/easing.min.js' %}"></script>
+    <script src="{% static 'lib/waypoints/waypoints.min.js' %}"></script>
+    <script src="{% static 'lib/owlcarousel/owl.carousel.min.js' %}"></script>
+
+    <!-- Template Javascript -->
+    <script src="{% static 'js/main.js' %}"></script>
+</body>
+
 </html>

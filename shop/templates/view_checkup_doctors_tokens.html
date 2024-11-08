@@ -142,5 +142,65 @@
                 {% endif %}
             </div>
         </div>
+        <div class="col-md-6">
+            <h5 class="text-center">Service Token Details</h5>
+            {% if all_tokens_services %}
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped table-hover">
+                        <thead>
+                            <tr class="text-center">
+                                <th>Token</th>
+                                <th colspan=2>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for all_tokens_service in all_tokens_services %}
+                                <tr class="text-center">
+                                    <td>{{ all_tokens_service.token }}</td>
+                                    <td>
+                                        <a href="{% url 'update_token_service_offered' all_tokens_service.id %}">
+                                            <button type="submit" class="btn btn-success btn-sm">Update</button>
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <button type="button"
+                                                class="btn btn-danger btn-sm"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#exampleModal{{ all_token.id }}">Delete</button>
+                                    </td>
+                                </tr>
+                                <!-- Modal -->
+                                <div class="modal fade"
+                                     id="exampleModal{{ all_token.id }}"
+                                     tabindex="-1"
+                                     aria-labelledby="exampleModal{{ all_token.id }}"
+                                     aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h1 class="modal-title fs-5" id="exampleModal{{ all_token.id }}">Delete</h1>
+                                                <button type="button"
+                                                        class="btn-close"
+                                                        data-bs-dismiss="modal"
+                                                        aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">Are You Sure You Want to Delete</div>
+                                            <div class="modal-footer">
+                                                {% comment %} <a href="{% url 'delete_token_checkup_details' all_token.id %}"> {% endcomment %}
+                                                <button type="button" class="btn btn-Danger btn-sm">Confirm Delete</button>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="alert alert-primary text-center" role="alert">Currently No Tokens Added</div>
+        {% endif %}
     </div>
+</div>
+
 {% endblock content %}

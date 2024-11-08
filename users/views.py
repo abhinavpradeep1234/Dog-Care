@@ -5,9 +5,11 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.shortcuts import get_object_or_404
 from users.utils import create_notification
-from users.models import Notification,Offers
+from users.models import Notification, Offers
 from users.utils import create_offers
-from shop.models import Accessories
+from shop.models import Accessories, BookingService, BookingFood, BookingAccessories
+
+
 def Signup(request):
     if request.method == "POST":
         form = SignupForm(request.POST)
@@ -36,7 +38,7 @@ def log_in(request):
             password = form.cleaned_data["password"]
             try:
                 user = CustomUser.objects.get(username=username)
-            except CustomUser.exits():
+            except CustomUser.DoesNotExist:
                 messages.error(request, "Username Doesn't Exists")
             user = authenticate(username=username, password=password)
             if user is not None:
@@ -78,20 +80,23 @@ def Shop_owner_dashboard(request):
     user_count = CustomUser.objects.count()
     role_count = CustomUser.objects.filter(role="SHOP OWNER").count()
     accessories = Accessories.objects.all()  # Fetch all accessories
-    
-          
 
     context = {
         "page_title": "Shop Owner",
         "user_count": user_count,
         "role_count": role_count,
-        'all_accessorie': accessories,
+        "all_accessorie": accessories,
     }
     return render(request, "shop_owner_dashboard.html", context)
 
 
 def users_dashboard(request):
-    context = {"page_title": "User DashBoard"}
+    context = {
+        "page_title": "User DashBoard",
+        "all_users": BookingService.objects.all(),
+        "all_accessories": BookingAccessories.objects.all(),
+        "all_foods": BookingFood.objects.all(),
+    }
 
     return render(request, "users_dashboard.html", context)
 
@@ -168,7 +173,11 @@ def read_offers(request, pk):
 
 # offers
 def view_offers(request):
-    context = {"page_title": "All Offers", "form": OfferForm(),"all_offers":Offers.objects.all().order_by('-id')}
+    context = {
+        "page_title": "All Offers",
+        "form": OfferForm(),
+        "all_offers": Offers.objects.all().order_by("-id"),
+    }
 
     return render(request, "add_view_offers.html", context)
 
@@ -180,17 +189,18 @@ def view_offers(request):
 #             offers = form.save(commit=False)
 #             offers.username = request.user
 #             form.save()
-            
+
 #             messages.success(
 #                 request, "Offers Added  Successfully", extra_tags="alert-success"
 #             )
 #             notify=CustomUser.objects.filter(is_active=True)
 #             offer=offers.save
-            
+
 #             if request.user.is_authenticated:
 #                 create_offers(notify,offer)
 #             return redirect("shop_dashboard")
-        
+
+
 #         else:
 #             for error_list in form.errors.values():
 #                 for errors in error_list:
@@ -202,18 +212,24 @@ def add_offers(request):
         form = OfferForm(request.POST)
         if form.is_valid():
             offers = form.save(commit=False)
-            offers.username = request.user  # Ensure this field exists in the Offers model
+            offers.username = (
+                request.user
+            )  # Ensure this field exists in the Offers model
             offers.save()
-            
-            messages.success(request, "Offers Added Successfully", extra_tags="alert-success")
+
+            messages.success(
+                request, "Offers Added Successfully", extra_tags="alert-success"
+            )
             return redirect("shop_dashboard")
         else:
             # Print out form errors for debugging
             print(form.errors)  # Check the console for any validation issues
             for error_list in form.errors.values():
                 for error in error_list:
-                    messages.error(request, error, extra_tags="alert-danger")  # Change to error
-            
+                    messages.error(
+                        request, error, extra_tags="alert-danger"
+                    )  # Change to error
+
     else:
         form = OfferForm()  # Initialize a new form for GET requests
 
@@ -224,5 +240,5 @@ def add_offers(request):
 def delete_offers(request, pk):
     to_delete = get_object_or_404(Offers, id=pk)
     to_delete.delete()
-    messages.success(request, "Offers Deleted Successfully",extra_tags="alert-success")
+    messages.success(request, "Offers Deleted Successfully", extra_tags="alert-success")
     return redirect("shop_dashboard")

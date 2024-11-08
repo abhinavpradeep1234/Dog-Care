@@ -15,9 +15,27 @@
             <div class="col-md-6 mx-auto">
                 <div class="card">
                     <div class="card-body">
-                        <form method="post">
+                        <form method="post"> 
+                            <div>
+                                <label>Accessories name:</label>
+                                {{ form.accessories_name }}
+                                <br>
+                        
+                                <label>Price:</label>
+                                {{ form.price }}
+                                <br>
+                        
+                                <label>Quantity:</label>
+                                {{ form.quantity }}
+                                <br>
+                        
+                                <p class ="text-center text-success">Total price: <span id="total_price">0</span></p>
+                                <p  class ="text-center text-danger">Total Stock: <span id="total_stock`">{{all_accessorie.total_stock}}</span></p>
+                        
+
+                            {% comment %} <h5 class="class text-center text-danger">Total Stock : {{all_accessorie.total_stock}}</h5> {% endcomment %}
                             {% csrf_token %}
-                            {{ form.as_p }}
+                            
                             <button type="submit" class="btn btn-primary">{{ page_title }}</button>
                         </form>
                     </div>
@@ -25,4 +43,29 @@
             </div>
         </div>
     </div>
+
+
+
+    <script>
+        function calculateTotalPrice() {
+            // Get the values of price and quantity
+            const price = parseFloat(document.getElementById('id_price').value);
+            const quantity = parseInt(document.getElementById('id_quantity').value) ;
+
+            ///if (isNaN(quantity) || quantity < 1) {
+             //   quantity = 1;
+            //}
+        
+        
+    
+            // Calculate total price
+            const totalPrice = price * quantity;
+    
+            // Display total price
+            document.getElementById('total_price').textContent = totalPrice;
+        }
+    
+        // Add event listener to quantity input
+        document.getElementById('id_quantity').addEventListener('input', calculateTotalPrice);
+    </script>
 {% endblock content %}

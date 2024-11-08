@@ -21,7 +21,7 @@ urlpatterns = [
     path("add/Shop/Food", views.add_food, name="add_food"),
     path("update/Shop/Food/<int:pk>", views.update_food, name="update_food"),
     path("delete/Shop/Food/<int:pk>", views.delete_food, name="delete_food"),
-    #checkup
+    #checkupDoctors
     path(
         "view/Checkup_details", views.view_checkup_details, name="view_checkup_details"
     ),
@@ -40,6 +40,8 @@ urlpatterns = [
         views.delete_doctors_checkup_details,
         name="delete_doctors_checkup_details",
     ),
+        #checkupDoctors
+
     path(
         "add/Token/Checkup_details",
         views.add_token_checkup_details,
@@ -55,13 +57,34 @@ urlpatterns = [
         views.delete_token_checkup_details,
         name="delete_token_checkup_details",
     ),
+    
+    
+    
     #Appointment for Checkup
     path("view/Appointment/Booking", views.view_appointment, name="view_appointment"),
     path("Appointment/Booking", views.booking_appointment, name="booking_appointment"),
     
     
     
-    # path("Book/Service Offered", views.add_service_offered, name="add_service_offered"),
+    path("Booking/ServiceOffered/<int:pk>", views.booking_service_offered, name="booking_service_offered"),
+    # path("update/Booking/Service Offered/<int:pk>", views.update_booking_service_offered, name="update_booking_service_offered"),
+    # path("delete/Booking/Service Offered/<int:pk>", views.delete_booking_service_offered, name="delete_booking_service_offered"),
+    path("view/Booking/Service Offered", views.view_booking_service_offered, name="view_booking_service_offered"),
+    
+    
     path("Booking/Accessories/<int:pk>", views.booking_accessories, name="booking_accessories"),
-    # path("Booking/Food", views.booking_food, name="booking_food"),
+    
+    
+    
+    path("token/add/Service Offered", views.add_token_service_offered, name="add_token_service_offered"),
+    path("token/update/Service Offered/<int:pk>", views.update_token_service_offered, name="update_token_service_offered"),
+    path("token/delete/Service Offered/<int:pk>", views.delete_token_service_offered, name="delete_token_service_offered"),
+    # path("token/view/Service Offered", views.view_token_service_offered, name="view_token_service_offered"),
+
+    # path("Booking/Accessories/<int:pk>", views.booking_accessories, name="booking_accessories"),
+    # path("Booking/Accessories/<int:pk>", views.booking_accessories, name="booking_accessories"),
+    
+    
+    path("Booking/Food/<int:pk>", views.booking_food, name="booking_food"),
+    
 ]

@@ -1,13 +1,264 @@
 {% extends "base.html" %}
 {% block content %}
-    <div class="container mt-4 ms-4">
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb fs-4">
-                <li class="breadcrumb-item">
-                    <a href="{% url 'home' %}" class="text-decoration-none text-black"><i class="bi bi-house-door-fill"></i></a>
-                </li>
-                <li class="breadcrumb-item active" aria-current="page">User Dashboard</li>
-            </ol>
-        </nav>
+  <div class="container mt-4 ms-4">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb fs-4">
+        <li class="breadcrumb-item">
+          <a href="{% url 'home' %}" class="text-decoration-none text-black"><i class="bi bi-house-door-fill"></i></a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">User Dashboard</li>
+      </ol>
+    </nav>
+  </div>
+  <div class="container mt-4">
+    <div class="container mt-4">
+      <div class="row">
+        {% for all_accessorie in all_accessories %}
+
+        {% comment %} all_users {% endcomment %}
+          <div class="col-md-3">
+            <!-- Adjust the column size as needed -->
+            <div class="card mb-4">
+              <!-- Margin for spacing -->
+              <div class="d-flex justify-content-center align-items-center mt-4">
+              </div>
+              <div class="card-body">
+                <h5 class="card-title text-center">Booking Confirmed</h5>
+                <p class="card-text text-center">Accessories Name : {{ all_accessorie.accessories_name }}</p>
+                <p class="card-text text-center">Quantity : {{ all_accessorie.quantity }}</p>
+                <p class="card-text text-center">Price : {{ all_accessorie.price }}</p>
+                <div class="d-flex justify-content-center">
+                  <div class="btn-group" role="group" aria-label="Basic example">
+                  <button type="button"
+                            class="btn btn-danger btn-sm"
+                            data-bs-toggle="modal"
+                            data-bs-target="#deleteModal{{ all_book.id }}">
+                      <i class="bi bi-trash"></i>Cancel Booking
+                    </button> 
+                  <a class="btn btn-success btn-sm" href="" role="button"><i class="bi bi-arrow-counterclockwise"></i>Edit Booking</a>
+                  </div>
+                </div>
+                <!-- Modal -->
+                <div class="modal fade"
+                     id="deleteModal{{ all_book.id }}"
+                     tabindex="-1"
+                     aria-labelledby="deleteModal{{ all_book.id }}"
+                     aria-hidden="true">
+                  <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="deleteModal{{ all_book.id }}">Delete</h1>
+                        <button type="button"
+                                class="btn-close"
+                                data-bs-dismiss="modal"
+                                aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">Are you sure you want to Delete</div>
+                      <div class="modal-footer">
+                        <a class="btn btn-danger btn-sm"
+                           {% comment %}
+                           href="{% url 'delete_library' all_book.id %}"
+                           {% endcomment %}
+                           role="button">Confirm Delete</a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+
+
+
+
+
+
+
+
+        {% for all_user in all_users %}
+
+        {% comment %} all_users {% endcomment %}
+          <div class="col-md-3">
+            <!-- Adjust the column size as needed -->
+            <div class="card mb-4">
+              <!-- Margin for spacing -->
+              <div class="d-flex justify-content-center align-items-center mt-4">
+              </div>
+              <div class="card-body">
+                <h5 class="card-title text-center">Booking Confirmed</h5>
+                <p class="card-text text-center">Service Name : {{ all_user.service_name }}</p>
+                <p class="card-text text-center">Quantity : {{ all_accessorie.quantity }}</p>
+                <p class="card-text text-center">Price : {{ all_user.price }}</p>
+                <div class="d-flex justify-content-center">
+                  <div class="btn-group" role="group" aria-label="Basic example">
+                  <button type="button"
+                            class="btn btn-danger btn-sm"
+                            data-bs-toggle="modal"
+                            data-bs-target="#deleteModal{{ all_book.id }}">
+                      <i class="bi bi-trash"></i>Cancel Booking
+                    </button> 
+                  <a class="btn btn-success btn-sm" href="" role="button"><i class="bi bi-arrow-counterclockwise"></i>Edit Booking</a>
+                  </div>
+                </div>
+                <!-- Modal -->
+                <div class="modal fade"
+                     id="deleteModal{{ all_book.id }}"
+                     tabindex="-1"
+                     aria-labelledby="deleteModal{{ all_book.id }}"
+                     aria-hidden="true">
+                  <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="deleteModal{{ all_book.id }}">Delete</h1>
+                        <button type="button"
+                                class="btn-close"
+                                data-bs-dismiss="modal"
+                                aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">Are you sure you want to Delete</div>
+                      <div class="modal-footer">
+                        <a class="btn btn-danger btn-sm"
+                           {% comment %}
+                           href="{% url 'delete_library' all_book.id %}"
+                           {% endcomment %}
+                           role="button">Confirm Delete</a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+
+
+
+
+        {% for all_accessorie in all_accessories %}
+
+        {% comment %} all_users {% endcomment %}
+          <div class="col-md-3">
+            <!-- Adjust the column size as needed -->
+            <div class="card mb-4">
+              <!-- Margin for spacing -->
+              <div class="d-flex justify-content-center align-items-center mt-4">
+              </div>
+              <div class="card-body">
+                <h5 class="card-title text-center">Booking Confirmed</h5>
+                <p class="card-text text-center">Accessories Name : {{ all_accessorie.accessories_name }}</p>
+                <p class="card-text text-center">Quantity : {{ all_accessorie.quantity }}</p>
+                <p class="card-text text-center">Price : {{ all_accessorie.price }}</p>
+                <div class="d-flex justify-content-center">
+                  <div class="btn-group" role="group" aria-label="Basic example">
+                  <button type="button"
+                            class="btn btn-danger btn-sm"
+                            data-bs-toggle="modal"
+                            data-bs-target="#deleteModal{{ all_book.id }}">
+                      <i class="bi bi-trash"></i>Cancel Booking
+                    </button> 
+                  <a class="btn btn-success btn-sm" href="" role="button"><i class="bi bi-arrow-counterclockwise"></i>Edit Booking</a>
+                  </div>
+                </div>
+                <!-- Modal -->
+                <div class="modal fade"
+                     id="deleteModal{{ all_book.id }}"
+                     tabindex="-1"
+                     aria-labelledby="deleteModal{{ all_book.id }}"
+                     aria-hidden="true">
+                  <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="deleteModal{{ all_book.id }}">Delete</h1>
+                        <button type="button"
+                                class="btn-close"
+                                data-bs-dismiss="modal"
+                                aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">Are you sure you want to Delete</div>
+                      <div class="modal-footer">
+                        <a class="btn btn-danger btn-sm"
+                           {% comment %}
+                           href="{% url 'delete_library' all_book.id %}"
+                           {% endcomment %}
+                           role="button">Confirm Delete</a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+
+
+        {% for all_accessorie in all_accessories %}
+
+        {% comment %} all_users {% endcomment %}
+          <div class="col-md-3">
+            <!-- Adjust the column size as needed -->
+            <div class="card mb-4">
+              <!-- Margin for spacing -->
+              <div class="d-flex justify-content-center align-items-center mt-4">
+              </div>
+              <div class="card-body">
+                <h5 class="card-title text-center">Booking Confirmed</h5>
+                <p class="card-text text-center">Accessories Name : {{ all_accessorie.accessories_name }}</p>
+                <p class="card-text text-center">Quantity : {{ all_accessorie.quantity }}</p>
+                <p class="card-text text-center">Price : {{ all_accessorie.price }}</p>
+                <div class="d-flex justify-content-center">
+                  <div class="btn-group" role="group" aria-label="Basic example">
+                  <button type="button"
+                            class="btn btn-danger btn-sm"
+                            data-bs-toggle="modal"
+                            data-bs-target="#deleteModal{{ all_book.id }}">
+                      <i class="bi bi-trash"></i>Cancel Booking
+                    </button> 
+                  <a class="btn btn-success btn-sm" href="" role="button"><i class="bi bi-arrow-counterclockwise"></i>Edit Booking</a>
+                  </div>
+                </div>
+                <!-- Modal -->
+                <div class="modal fade"
+                     id="deleteModal{{ all_book.id }}"
+                     tabindex="-1"
+                     aria-labelledby="deleteModal{{ all_book.id }}"
+                     aria-hidden="true">
+                  <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="deleteModal{{ all_book.id }}">Delete</h1>
+                        <button type="button"
+                                class="btn-close"
+                                data-bs-dismiss="modal"
+                                aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">Are you sure you want to Delete</div>
+                      <div class="modal-footer">
+                        <a class="btn btn-danger btn-sm"
+                           {% comment %}
+                           href="{% url 'delete_library' all_book.id %}"
+                           {% endcomment %}
+                           role="button">Confirm Delete</a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+
+      </div>
     </div>
+  </div>
+  <style>
+.card{
+width:310px;
+height:250px;
+}
+.card-img-top{
+width:100px;
+height:100px;
+}
+  </style>
 {% endblock content %}
