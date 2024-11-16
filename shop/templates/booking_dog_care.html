@@ -15,57 +15,68 @@
             <div class="col-md-6 mx-auto">
                 <div class="card">
                     <div class="card-body">
-                        <form method="post"> 
-                            <div>
-                                <label>Accessories name:</label>
-                                {{ form.accessories_name }}
-                                <br>
-                        
-                                <label>Price:</label>
-                                {{ form.price }}
-                                <br>
-                        
-                                <label>Quantity:</label>
-                                {{ form.quantity }}
-                                <br>
-                        
-                                <p class ="text-center text-success">Total price: <span id="total_price">0</span></p>
-                                <p  class ="text-center text-danger">Total Stock: <span id="total_stock`">{{all_accessorie.total_stock}}</span></p>
-                        
-
-                            {% comment %} <h5 class="class text-center text-danger">Total Stock : {{all_accessorie.total_stock}}</h5> {% endcomment %}
-                            {% csrf_token %}
-                            
-                            <button type="submit" class="btn btn-primary">{{ page_title }}</button>
-                        </form>
+                        <form method="post">
+                            {% if accessories %}
+                                <div>
+                                    <label>Accessories name:</label>
+                                    {{ form.accessories_name }}
+                                    <br>
+                                    <label>Price:</label>
+                                    {{ form.price }}
+                                    <br>
+                                    <label>Quantity:</label>
+                                    {{ form.quantity }}
+                                    <br>
+                                    <p class ="text-center text-success">
+                                        Total price: <span id="total_price">0</span>
+                                    </p>
+                                    <p class ="text-center text-danger">
+                                        Total Stock: <span id="total_stock`">{{ all_accessorie.total_stock }}</span>
+                                    </p>
+                                {% endif %}
+                                {% if food %}
+                                    <label>Food Product:</label>
+                                    {{ form.Food_name }}
+                                    <br>
+                                    <label>Price:</label>
+                                    {{ form.price }}
+                                    <br>
+                                    <label>Quantity:</label>
+                                    {{ form.quantity }}
+                                    <br>
+                                    <p class ="text-center text-success">
+                                        Total price: <span id="total_price">0</span>
+                                    </p>
+                                    <p class ="text-center text-danger">
+                                        <p class="text-center">Total Stock : {{ all_food.total_stock|default:"0" }}</p>
+                                    </p>
+                                {% endif %}
+                                {% comment %} <h5 class="class text-center text-danger">Total Stock : {{all_accessorie.total_stock}}</h5> {% endcomment %}
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-primary">{{ page_title }}</button>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+        <script>
+      // Function to calculate total price
+function calculateTotalPrice() {
+    // Get the price and quantity values from input fields
+    let price = parseFloat(document.getElementById('id_price').value) || 0;
+    let quantity = parseFloat(document.getElementById('id_quantity').value) || 0;
 
+    // Calculate the total price
+    let totalPrice = price * quantity;
 
+    // Update the total price display, fallback to 0 if NaN
+    document.getElementById('total_price').textContent = isNaN(totalPrice) ? "0" : totalPrice.toFixed(2);
+}
 
-    <script>
-        function calculateTotalPrice() {
-            // Get the values of price and quantity
-            const price = parseFloat(document.getElementById('id_price').value);
-            const quantity = parseInt(document.getElementById('id_quantity').value) ;
+// Event listeners for input fields to update the total price
+document.getElementById('id_price').addEventListener('input', calculateTotalPrice);
+document.getElementById('id_quantity').addEventListener('input', calculateTotalPrice);
 
-            ///if (isNaN(quantity) || quantity < 1) {
-             //   quantity = 1;
-            //}
-        
-        
-    
-            // Calculate total price
-            const totalPrice = price * quantity;
-    
-            // Display total price
-            document.getElementById('total_price').textContent = totalPrice;
-        }
-    
-        // Add event listener to quantity input
-        document.getElementById('id_quantity').addEventListener('input', calculateTotalPrice);
-    </script>
-{% endblock content %}
+        </script>
+    {% endblock content %}

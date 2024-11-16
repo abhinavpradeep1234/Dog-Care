@@ -1,0 +1,80 @@
+{% comment %} {% extends "base.html" %}
+{% block content %}
+    <div class="container ms-2 mt-4">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb fs-4">
+                <li class="breadcrumb-item">
+                    <a href="{% url 'home' %}" class="text-decoration-none text-black"><i class="bi bi-house-door-fill"></i></a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">{{ page_title }}</li>
+            </ol>
+        </nav>
+    </div>
+    <div class="container mt-4">
+        <div class="row">
+            <div class="card">
+                <div class="col-md-4 mx-auto">
+                    <div class="card-body">
+                        <p class="text-center">Total Stock : {{ all_food.total_stock|default:"0" }}</p>
+                        <form method="post">
+                            <label>Food Product:</label>
+                            {{ form.Food_name }}
+                            <br>
+                    
+                            <label>Price:</label>
+                            {{ form.price }}
+                            <br>
+                    
+                            <label>Quantity:</label>
+                            {{ form.quantity }}
+                            <br>
+                    
+                            <p class ="text-center text-success">Total price: <span id="total_price">0</span></p>
+                            <p  class ="text-center text-danger">Total Stock: <span id="total_stock`">{{all_accessorie.total_stock}}</span></p>
+                    
+
+                            {% csrf_token %}
+
+
+                            <button type="submit" class="btn btn-primary btn-sm">Submit</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function calculateTotalPrice() {
+
+        const quantity=parseFloat(document.getElementById("id_quantity").value);
+        const  price=parseInt(document.getElementById("id_price").value);
+        const total_price=quantity * price
+        document.getElementById('total_price').textContent = total_price;
+    }
+
+    // Add event listener to quantity input
+    document.getElementById('id_quantity').addEventListener('input', calculateTotalPrice);
+
+    </script>
+
+{% endblock content %}
+<script>
+    function calculateTotalPrice() {
+        // Get the values of price and quantity
+        const price = parseFloat(document.getElementById('id_price').value);
+        const quantity = parseInt(document.getElementById('id_quantity').value) ;
+
+     
+    
+
+        // Calculate total price
+        const totalPrice = price * quantity;
+
+        // Display total price
+        document.getElementById('total_price').textContent = totalPrice;
+    }
+
+    // Add event listener to quantity input
+    document.getElementById('id_quantity').addEventListener('input', calculateTotalPrice);
+</script> {% endcomment %}

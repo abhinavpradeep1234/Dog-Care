@@ -7,55 +7,25 @@
                     <a href="{% url 'home' %}" class="text-decoration-none text-black"><i class="bi bi-house-door-fill"></i></a>
                 </li>
                 <li class="breadcrumb-item">
-                    <a href="{% url 'shop_dashboard' %}"
-                       class="text-decoration-none text-black">Owner Dashboard</a>
+                    <a href="{% url 'booking_appointment' %}"
+                       class="text-decoration-none text-black">checkup</a>
                 </li>
                 <li class="breadcrumb-item active" aria-current="page">{{ page_title }}</li>
             </ol>
         </nav>
     </div>
-    <div class="container ms-4">
-        <div class="row">
-            <!-- First Box -->
-            <div class="col-sm-4 col-md-3 mb-3">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Today Appointment</h5>
-                        <a href="#" class="btn btn-primary">{{ count }}</a>
-                    </div>
-                </div>
-            </div>
-            <!-- Second Box -->
-            <div class="col-sm-4  col-md-3 mb-3">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Tommorrow Appointment</h5>
-                        <a href="#" class="btn btn-primary">{{ counts }}</a>
-                    </div>
-                </div>
-            </div>
-            <!-- Third Box -->
-            <div class="col-sm-4  col-md-3 mb-3">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Completed the check-up</h5>
-                        <a href="#" class="btn btn-primary">{{ checkups }}</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
     {% if appointments %}
-        <div class="container">
+    
+        <div class="container mt-4">
             <table class="table table-striped  table-bordered table-hover  table-sm">
                 <thead>
                     <tr class="text-center">
                         <th scope="colspan">Username</th>
                         <th scope="colspan">Email</th>
                         <th scope="colspan">Doctor</th>
+                        <th scope="colspan">status</th>
                         <th scope="colspan">Token Details</th>
                         <th scope="colspan">Appointment Date</th>
-                        <th scope="colspan">Appointment Status</th>
                         <th colspan=2>Actions</th>
                     </thead>
                 </tr>
@@ -65,12 +35,9 @@
                             <td>{{ appointment.username }}</td>
                             <td>{{ appointment.email }}</td>
                             <td>{{ appointment.doctor_name }}</td>
+                            <td>{{ appointment.status }}</td>
                             <td>{{ appointment.Token }}</td>
                             <td>{{ appointment.appointment_date }}</td>
-                            <td>
-                                <a href="{% url 'status_appointment' appointment.id %}"
-                                   class="btn btn-outline-primary btn-sm">{{ appointment.status }}</a>
-                            </td>
                             <td>
                                 <button type="button"
                                         class="btn  btn-sm"
@@ -108,7 +75,7 @@
                                 </div>
                                 <div class="modal-body">Are You Sure You Want to Delete</div>
                                 <div class="modal-footer">
-                                    <a href="{% url 'delete_appointment' appointment.id %}">
+                                    <a href="{% url 'delete_appointment'  appointment.id %}">
                                         <button type="button" class="btn btn-danger">Confirm Delete</button>
                                     </a>
                                 </div>

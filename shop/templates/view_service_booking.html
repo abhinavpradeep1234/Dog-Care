@@ -64,10 +64,13 @@
                                 </div>
                             {% endfor %}
                         </tbody>
+                     
                     </table>
+                    
                 {% else %}
                     <div class="alert alert-success text-center" role="alert">Currently No Service Booked!!</div>
                 {% endif %}
+                {% include "pagination.html" %}
             </div>
 
             <!-- Middle Table -->
@@ -135,6 +138,7 @@
                                 <th>Food Items</th>
                                 <th>Quantity</th>
                                 <th>Price</th>
+                                <th> Total Price</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -145,6 +149,7 @@
                                     <td>{{ all_food.Food_name }}</td>
                                     <td>{{ all_food.quantity }}</td>
                                     <td>{{ all_food.price }}</td>
+                                    <td>{{ all_food.total_price }}</td>
                                     <td>
                                         <button type="button" class="btn btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal{{ all_user.id }}">
                                             <i class="bi bi-trash3"></i>

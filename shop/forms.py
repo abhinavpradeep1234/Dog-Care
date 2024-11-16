@@ -36,15 +36,13 @@ class AccessoriesForm(forms.ModelForm):
             "price": forms.TextInput(attrs={"class": "form-control"}),
             "image": forms.FileInput(attrs={"class": "form-control"}),
         }
-  
-
 
 
 class DogFoodForm(forms.ModelForm):
 
     class Meta:
         model = DogFood
-        fields = ["Food_name", "price", "image","total_stock"]
+        fields = ["Food_name", "price", "image", "total_stock"]
         widgets = {
             "Food_name": forms.TextInput(attrs={"class": "form-control"}),
             "price": forms.TextInput(attrs={"class": "form-control"}),
@@ -54,53 +52,64 @@ class DogFoodForm(forms.ModelForm):
 
 # booking service,Food,Accessories create,Update
 class BookServiceOfferedForm(forms.ModelForm):
+    service_name = forms.CharField(
+        widget=forms.TextInput(attrs={"class": "form-control", "readonly": "readonly"})
+    )
+
     class Meta:
         model = BookingService
-        fields = ["service_name", "price", "token"]
-        
+        fields = ["price", "token"]
         widgets = {
-            # "service_name": forms.TextInput(attrs={"readonly": "readonly"}),
-            "price": forms.TextInput(attrs={"readonly": "readonly"}),
-            "image": forms.FileInput(attrs={"class": "form-control"}),
+            "price": forms.TextInput(
+                attrs={"readonly": "readonly", "class": "form-control"}
+            ),
+            "token": forms.Select(attrs={"class": "form-control"}),
         }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        token_available = TokenService.objects.filter(available=True)
-        self.fields["token"].queryset = token_available
-        
-        if self.instance and self.instance.service_name:
-            self.fields['service_name'].widget = forms.TextInput(attrs={
-                'readonly': 'readonly'
-            })
-            self.fields['service_name'].initial = self.instance.service_name.service_name
 
-
-        
- 
+        # Limit available tokens
+        self.fields["token"].queryset = TokenService.objects.filter(available=True)
 
 
 class BookAccessoriesForm(forms.ModelForm):
+    accessories_name = forms.CharField(
+        widget=forms.TextInput(attrs={"readonly": "readonly", "class": "form-control"})
+    )
+
     class Meta:
         model = BookingAccessories
-        fields = ["accessories_name", "price", "quantity"]
-        
+        fields = [ "price", "quantity"]
+
         widgets = {
-            "Food_name": forms.TextInput(attrs={"readonly": "readonly"}),
-            "price": forms.TextInput(attrs={"readonly": "readonly"}),
-            "image": forms.FileInput(attrs={"class": "form-control"}),
+            "accessories_name": forms.TextInput(
+                attrs={"class": "form-control", "readonly": "readonly"}
+            ),
+            "price": forms.NumberInput(
+                attrs={"readonly": "readonly", "class": "form-control"}
+            ),
+            "quantity": forms.NumberInput(attrs={"class": "form-control"}),
         }
- 
+
+
 class BookFoodForm(forms.ModelForm):
+    Food_name = forms.CharField(
+        widget=forms.TextInput(attrs={"readonly": "readonly", "class": "form-control"})
+    )
+
     class Meta:
         model = BookingFood
-        fields = ["Food_name", "price","quantity"]
+        fields = ["price", "quantity"]
         widgets = {
-            "Food_name": forms.TextInput(attrs={"readonly": "readonly"}),
-            "price": forms.TextInput(attrs={"readonly": "readonly"}),
-            # "image": forms.FileInput(attrs={"class": "form-control"}),
+            "Food_name": forms.Select(
+                attrs={"class": "form-select"}
+            ),
+            "price": forms.TextInput(
+                attrs={ "class": "form-control","readonly": "readonly"}
+            ),
+            "quantity": forms.NumberInput(attrs={"class": "form-control"}),
         }
- 
 
 
 # checkup doctors
@@ -154,6 +163,21 @@ class BookingAppointmentForm(forms.ModelForm):
 
         self.fields["appointment_date"].widget.attrs["max"] = max_date
 
+
+
+
+
+
+class AppointmentStatusForm(forms.ModelForm):
+
+    class Meta:
+        model = Appointment
+        fields = ["status"]
+        widgets = {
+            "status": forms.Select(
+                attrs={"class": "form-select"}
+            )
+        }
 
 class ServiceTokenForm(forms.ModelForm):
     class Meta:

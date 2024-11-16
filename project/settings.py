@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/5.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
+
 import os
 from pathlib import Path
 
@@ -38,7 +39,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "users",
-    'shop',
+    "shop",
 ]
 
 MIDDLEWARE = [
@@ -77,31 +78,21 @@ WSGI_APPLICATION = "project.wsgi.application"
 
 # DATABASES = {
 #     "default": {
-#         "ENGINE": "django.db.backends.mysql",
-#         "NAME": 'dogs_care',
+#         "ENGINE": "django.db.backends.postgresql",
+#         "NAME": 'dog_care',
 #         "HOST":"localhost",
-#         "PASSWORD":" ",
-#         "PORT":'3306',
-#         "USER":"root"
+#         "PASSWORD":"1234",
+#         "PORT":'5433',
+#         "USER":"postgres"
 #     }
 # }
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.mysql',  # Ensure this is MySQL
-#         'NAME': 'dog_care',                   # Your database name
-#         'USER': 'root',                       # Your MySQL username (usually lowercase)
-#         'PASSWORD': 'root',          # Your MySQL root password
-#         'HOST': 'localhost',                  # Typically 'localhost' if MySQL is local
-#         'PORT': '3306',                       # MySQL default port
-#     }
-# }
+
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+    "default": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "db.sqlite3",
     }
 }
-
 
 
 # Password validation
@@ -128,7 +119,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = 'Asia/Kolkata'
+TIME_ZONE = "Asia/Kolkata"
 
 USE_I18N = True
 
@@ -139,9 +130,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = "static/"
-STATICFILES_DIRS=[
-    os.path.join(BASE_DIR,'static/')
-]
+STATICFILES_DIRS = [os.path.join(BASE_DIR, "static/")]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
@@ -150,5 +139,5 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 AUTH_USER_MODEL = "users.CustomUser"
 
-MEDIA_ROOT_BASE='upload'
-MEDIA_URL='/media/'
+MEDIA_ROOT_BASE = "upload"
+MEDIA_URL = "/media/"

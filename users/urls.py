@@ -26,6 +26,7 @@ urlpatterns = [
     path("view/offers", views.view_offers, name="view_offers"),
     path("add/offers", views.add_offers, name="add_offers"),
     path("delete/offers/<int:pk>", views.delete_offers, name="delete_offers"),
+    path("403/", views.unauthorized, name="403"),
 
     
     

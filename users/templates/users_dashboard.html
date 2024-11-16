@@ -10,6 +10,15 @@
       </ol>
     </nav>
   </div>
+
+  <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4 me-4">
+    {% comment %} <a href="{% url '' %}" class="btn btn-outline-success btn-sm">Add Service</a> {% endcomment %}
+    
+    <a href="{% url 'user_booking_appointment' %}" class="btn btn-outline-success">Booked Appointment</a>
+
+    {% comment %} <a href="{% url 'booking_food' %}" class="btn btn-outline-success">Booked Food items</a> {% endcomment %}
+</div>
+
   <div class="container mt-4">
     <div class="container mt-4">
       <div class="row">

@@ -242,3 +242,9 @@ def delete_offers(request, pk):
     to_delete.delete()
     messages.success(request, "Offers Deleted Successfully", extra_tags="alert-success")
     return redirect("shop_dashboard")
+
+
+
+def unauthorized(request):
+    context={"page_title":"403"}
+    return render(request,"404.html",context)
