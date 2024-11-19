@@ -6,21 +6,17 @@
                 <li class="breadcrumb-item">
                     <a href="{% url 'home' %}" class="text-decoration-none text-black"><i class="bi bi-house-door-fill"></i></a>
                 </li>
-               
+                <li class="breadcrumb-item">
+                    <a href="{% url 'users_dashboard' %}"
+                       class="text-decoration-none text-black">User Dashboard</a>
+                </li>
                 <li class="breadcrumb-item active" aria-current="page">{{ page_title }}</li>
             </ol>
         </nav>
     </div>
-    <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4 me-4">
-      <a href="{% url 'booked_service' %}" class="btn btn-outline-success btn-sm">BookedService</a>
-      <a href="{% url 'booked_food' %}" class="btn btn-outline-success btn-sm">Booked Food Products</a>
-  
-  
-      <a href="{% url 'booked_accessories' %}" class="btn btn-outline-success btn-sm">Booked Accessories</a>
-  </div>
-    {% if appointments %}
-        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 ms-2 mt-4">
-            {% for appointment in appointments %}
+    {% if all_food %}
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 ms-2">
+            {% for food in all_food %}
                 <div class="col">
                     <div class="card h-100">
                         {% comment %} <div class="card-header">
@@ -28,16 +24,16 @@
                         </div> {% endcomment %}
                         <div class="card-body">
                             <p>
-                                <strong>Username:</strong> {{ appointment.username}}
+                                <strong>Food Product:</strong> {{ food.Food_name }}
                             </p>
                             <p>
-                                <strong>Token Details:</strong>{{ appointment.token }}
+                                <strong>Quantity:</strong>{{ food.quantity }}
                             </p>
                             <p>
-                                <strong>Doctor:</strong>  {{ appointment.doctor_name }}
+                                <strong>Price:</strong>  {{ food.total_price }}
                             </p>
                             <p>
-                                <strong>Date:</strong> {{ appointment.appointment_date }}
+                                <strong>date:</strong> {{ company.mission }}
                             </p>
                         </div>
                         <div class="card-footer text-center">
@@ -77,9 +73,8 @@
         </div>
     {% endfor %}
 </div>
-{% comment %} {% include "pagination.html" %} {% endcomment %}
+{% include "pagination.html" %}
 {% else %}
-<div class="alert alert-success text-center mt-2" role="alert">There is no Appointment Booked yet</div>
+<div class="alert alert-success text-center mt-2" role="alert">There is no Food Products Booked yet</div>
 {% endif %}
 {% endblock content %}
-

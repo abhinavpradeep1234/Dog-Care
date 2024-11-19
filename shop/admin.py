@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 # Register your models here.
-from shop.models import ServiceOffered,Accessories, DogFood,Doctors,Token,Appointment,BookingFood,BookingAccessories
+from shop.models import ServiceOffered,Accessories, DogFood,Doctors,Token,Appointment,BookingFood,BookingAccessories,BookingService
 
 admin.site.register(ServiceOffered)
 admin.site.register(Accessories)
@@ -11,3 +11,4 @@ admin.site.register(Token)
 admin.site.register(Appointment)
 admin.site.register(BookingFood)
 admin.site.register(BookingAccessories)
+admin.site.register(BookingService)

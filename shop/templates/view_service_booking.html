@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
+{% if request.user.role == "SHOP OWNER"%}
+
     <div class="container ms-2 mt-4">
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb fs-4">
@@ -181,4 +183,5 @@
             </div>
         </div>
     </div>
+    {% endif %}
 {% endblock content %}

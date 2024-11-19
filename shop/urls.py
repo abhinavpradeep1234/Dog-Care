@@ -100,11 +100,11 @@ urlpatterns = [
     # path("Booking/Accessories/<int:pk>", views.booking_accessories, name="booking_accessories"),
     path("Booking/Food/<int:pk>", views.booking_food, name="booking_food"),
     # Checkup for user EDIT/DELETE
-    path(
-        "view/Booking/Appointment/",
-        views.BookingAppointment.as_view(),
-        name="user_booking_appointment",
-    ),
+    # path(
+    #     "view/Booking/Appointment/",
+    #     views.BookingAppointment.as_view(),
+    #     name="user_booking_appointment",
+    # ),
     path(
         "edit/Appointment/Booking/<int:pk>",
         views.update_appointment,
@@ -121,4 +121,12 @@ urlpatterns = [
         views.status_appointment,
         name="status_appointment",
     ),
+    # booking item in  dashboard food and accesories
+    path("booking/service", views.BookedService.as_view(), name="booked_service"),
+    path(
+        "booking/accessories",
+        views.BookedAccessories.as_view(),
+        name="booked_accessories",
+    ),
+    path("booking/food", views.BookedFood.as_view(), name="booked_food"),
 ]

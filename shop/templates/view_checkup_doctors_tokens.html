@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
+{% if request.user.role == "SHOP OWNER"%}
+
     <div class="container mt-4 ms-4">
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb fs-4">
@@ -76,6 +78,8 @@
                                 {% endfor %}
                             </tbody>
                         </table>
+                        {% include "pagination.html" %}
+
                     </div>
                 {% else %}
                     <div class="alert alert-primary text-center" role="alert">Currently No Doctors Added</div>
@@ -136,6 +140,8 @@
                                 {% endfor %}
                             </tbody>
                         </table>
+                        {% include "pagination.html" %}
+
                     </div>
                 {% else %}
                     <div class="alert alert-primary text-center" role="alert">Currently No Tokens Added</div>
@@ -202,5 +208,5 @@
         {% endif %}
     </div>
 </div>
-
+{% endif %}
 {% endblock content %}

@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% block content %}
-    <div class="container mt-4 ms-4">
+    <div class="container">
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb fs-4">
                 <li class="breadcrumb-item">
@@ -10,14 +10,23 @@
             </ol>
         </nav>
     </div>
+{% if request.user.role == "SHOP OWNER"%}
+    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+        <a class="btn btn-primary btn-sm" href="{% url 'add_service'%}" role="button">Add Services</a>
+        <a class="btn btn-primary btn-sm" href="{% url 'add_accessories'%}" role="button">Add Accessories</a>
+        <a class="btn btn-primary btn-sm" href="{% url 'add_food'%}" role="button">Add Food Products</a>
+
+        </div>
+        {% endif %}
+
     <style>
         .custom-card {
-            width: 18rem;
-            height: 300px; /* Fixed card width */
+            width: 15rem;
+            height: 250px; /* Fixed card width */
         }
         .custom-img {
-            height: 195px; /* Fixed image height */
-            object-fit: cover; /* Ensures images are scaled uniformly */
+            height: 118px; /* Fixed image height */
+            width:195px; /* Ensures images are scaled uniformly */
         }
     </style>
     <!-- Service Section -->
@@ -26,17 +35,22 @@
             <div class="col-md-12 mx-auto">
                 <div class="card">
                     <div class="card-body">
+                   
                         {% if all_services %}
-                            <h5 class="text-center">Service Offered</h5>
+                            <h5 class="text-center mt-2">Service Offered</h5>
                             <div class="d-flex flex-wrap justify-content-start">
+                              
                                 {% for all_service in all_services %}
+                                
                                     <div class="card custom-card mb-3 me-3">
                                         <!-- Set image size -->
-                                        <img src="{{ all_service.image.url }}"
+                                        <div class="d-flex justify-content-center align-items-center mt-3">
+                                            <img src="{{ all_service.image.url }}"
                                              class="card-img-top custom-img"
                                              alt="Service image">
+                                         </div>
                                         <div class="card-body">
-                                            <h5 class="card-title text-center">{{ all_service.service_name }}</h5>
+                                            <h6 class="card-title text-center">{{ all_service.service_name }}</h6>
                                             <p class="text-center">
                                                 <i class="bi bi-currency-rupee"></i>{{ all_service.price }}
                                             </p>
@@ -59,13 +73,13 @@
                                                     </div>
                                                 </div>
                                             {% endif %}
-                                            {% comment %} {% if user.role != "SHOP OWNER" %} {% endcomment %}
+                                            {% if user.role != "SHOP OWNER" %}
                                                 <div class="d-flex justify-content-center">
                                                     <a href="{% url 'booking_service_offered' all_service.id %}">
                                                     <button class="btn btn-primary btn-sm" type="button">Book Now</button>
                                                 </a>
                                             </div>
-                                        {% comment %} {% endif %} {% endcomment %}
+                                        {% endif %}
                                     </div>
                                 </div>
                                 <!-- Modal -->
@@ -114,9 +128,12 @@
                             {% for all_accessorie in all_accessories %}
                                 <div class="card custom-card mb-3 me-3">
                                     <!-- Set image size -->
+                                    <div class="d-flex justify-content-center align-items-center mt-2">
+
                                     <img src="{{ all_accessorie.image.url }}"
                                          class="card-img-top custom-img"
                                          alt="Accessory image">
+                                    </div>
                                     <div class="card-body">
                                         <h5 class="card-title text-center">{{ all_accessorie.accessories_name }}</h5>
                                         <p class="text-center">
@@ -141,13 +158,13 @@
                                                 </div>
                                             </div>
                                         {% endif %}
-                                        {% comment %} {% if request.user.role != "SHOP OWNER" %} {% endcomment %}
+                                        {% if request.user.role != "SHOP OWNER" %}
                                             <div class="d-flex justify-content-center">
                                                 <a href="{% url 'booking_accessories' all_accessorie.id %}">
                                                     <button class="btn btn-primary btn-sm" type="button">Book Now</button>
                                                 </a>
                                             </div>
-                                        {% comment %} {% endif %} {% endcomment %}
+                                        {% endif %}
                                     </div>
                                 </div>
                                 <!-- Modal -->
@@ -197,9 +214,12 @@
                             {% for all_food in all_foods %}
                                 <div class="card custom-card mb-3 me-3">
                                     <!-- Set image size -->
+                                    <div class="d-flex justify-content-center align-items-center mt-2">
+
                                     <img src="{{ all_food.image.url }}"
                                          class="card-img-top custom-img"
                                          alt="Food image">
+                                    </div>
                                     <div class="card-body">
                                         <h5 class="card-title text-center">{{ all_food.Food_name }}</h5>
                                         <p class="text-center">
@@ -224,16 +244,16 @@
                                                 </div>
                                             </div>
                                         {% endif %}
-                                        {% comment %} {% if request.user.role != "SHOP OWNER" %} {% endcomment %}
+                                        {% if request.user.role != "SHOP OWNER" %}
                                             <div class="d-flex justify-content-center">
-                                                {% comment %} <a href="{% url 'booking_food' all_food.id %}">
+                                               <a href="{% url 'booking_food' all_food.id %}">
                                                     <button class="btn btn-primary btn-sm" type="button">Book Now</button>
-                                                </a> {% endcomment %}
+                                                </a> 
                                                 <a href="{% url 'booking_food'  all_food.id %}">
                                                     <button class="btn btn-primary btn-sm" type="button">Book Now</button>
                                                 </a>
                                             </div>
-                                        {% comment %} {% endif %} {% endcomment %}
+                                       {% endif %} 
                                     </div>
                                 </div>
                                 <!-- Modal -->
@@ -262,7 +282,7 @@
                                 </div>
                             {% endfor %}
                         {% else %}
-                            <div class="alert alert-primary text-center" role="alert">Currently No Food Product Added to Shop Owner</div>
+                            <div class="alert alert-primary text-center " role="alert">Currently No Food Product Added to Shop Owner</div>
                         {% endif %}
                     </div>
                 </div>

@@ -1,4 +1,4 @@
-<html lang="en">
+{% comment %} <html lang="en">
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -116,8 +116,154 @@
         <!-- Bootstrap JS -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     </body>
+</html> {% endcomment %}
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  {% load static %}
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{{ page_title }} | Dog Care</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+  <link rel="icon" href="{% static 'image/favicon.png' %}" type="image/x-icon">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+  <style>
+    /* Remove unwanted horizontal scrollbar */
+    body {
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+    }
+
+    /* Fix sidebar */
+    nav.sidebar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100vh;
+      width: 250px;
+      background-color: #000000;
+      color: white;
+      z-index: 1000;
+      overflow-y: auto;
+    }
+
+    /* Sidebar links hover effect */
+    nav.sidebar .nav-link {
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    nav.sidebar .nav-link:hover {
+      background-color: green; /* Darker shade for hover */
+      color: #f0ad4e; /* Change text color to a noticeable shade */
+      border-radius: 5px; /* Optional: rounded corners */
+    }
+
+    /* Adjust main content to account for the fixed sidebar */
+    .main-content {
+      margin-left: 250px;
+      width: calc(100% - 250px);
+    }
+
+    /* Fix navbar */
+    nav.navbar {
+      position: fixed;
+      top: 0;
+      left: 250px;
+      width: calc(100% - 250px);
+      z-index: 1001;
+    }
+
+    /* Add padding to content to avoid overlapping the navbar */
+    .content-area {
+      margin-top: 56px; /* Match navbar height */
+    }
+  </style>
+</head>
+<body>
+  <!-- Sidebar -->
+  <nav class="sidebar text-white p-3">
+    <div class="d-grid col-8 mx-auto">
+      <img src="{% static 'image/88q.png' %}" alt="Logo" class="img-fluid" height="100" width="160">
+    </div>
+    <ul class="nav flex-column">
+      <li class="nav-item">
+        <h4 class="text-center mt-4">Dog Care</h4>
+      </li>  
+      <li class="nav-item">
+        <a class="nav-link active text-decoration-none text-white" href="{% url 'dashboard' %}">
+          <i class="bi bi-layout-text-window fs-5"></i><span class="ms-3">Dashboard</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link active text-decoration-none text-white" href="{% url 'booking_appointment' %}">
+          <i class="bi bi-calendar2-check fs-5"></i><span class="ms-3">Checkups</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link active text-decoration-none text-white" href="{% url 'notification' %}">
+          <i class="bi bi-bell-fill fs-5"></i><span class="ms-3">Notification</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link active text-decoration-none text-white" href="{% url 'view_offers' %}">
+          <i class="bi bi-megaphone fs-5"></i><span class="ms-3">Offers</span>
+        </a>
+      </li>
+
+
+
+
+      <li class="nav-item">
+        <a class="nav-link active text-decoration-none text-white" href="{% url 'view_complaints' %}">
+          <i class="bi bi-question-circle-fill fs-5"></i><span class="ms-3">Complaint</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link active text-decoration-none text-white" href="{% url 'view_shop' %}">
+          <i class="fa-solid fa-shield-dog fs-4"></i><span class="ms-3">Doggie Essential</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <nav class="navbar navbar-expand-lg navbar-dark border-bottom" style="background-color: #000000;">
+      <div class="container-fluid">
+        <a class="navbar-brand text-white" href="#">{{ page_title }} / Dog Care</a>
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
+              <i class="bi bi-person-circle"></i> {{ user }}
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li><a class="dropdown-item" href="#">Profile</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </nav>
+  
+    <div class="content-area p-4">
+        <div class="container ">
+            {% if messages %}
+                {% for message in messages %}
+                    <div {% if message.extra_tags %}class="text-center w-100 alert {{ message.tags }}"{% endif %}
+                         role="alert">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        </div>
+      {% block content %}
+      {% endblock content %}
+    </div>
+  </div>
+</body>
 </html>
-
-
-
-

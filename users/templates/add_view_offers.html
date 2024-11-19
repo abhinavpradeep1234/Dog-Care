@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
+
     <div class="container ms-2 mt-4">
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb fs-4">
@@ -83,6 +84,6 @@
             {% endfor %}
         </div>
     {% else %}
-        <div class="alert alert-warning" role="alert">Currently No New Offers</div>
+        <div class="alert alert-warning mt-3 text-center" role="alert">Currently No New Offers</div>
     {% endif %}
 {% endblock content %}

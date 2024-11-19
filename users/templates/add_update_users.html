@@ -1,24 +1,26 @@
 {% extends "base.html" %}
 {% block content %}
-    <div class="container ms-3 mt-3">
+    <div class="container  mt-2">
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb fs-4">
                 <li class="breadcrumb-item">
                     <a href="{% url 'home' %}" class="text-decoration-none text-black"><i class="bi bi-house-door-fill"></i></a>
                 </li>
+                {% if request.user.role == "SHOP OWNER"%}
                 <li class="breadcrumb-item">
                     <a href="{% url 'shop_dashboard' %}"
                        class="text-decoration-none text-black">Owner Dashboard</a>
                 </li>
+                {% endif %}
                 <li class="breadcrumb-item active " aria-current="page">{{ page_title }}</li>
             </ol>
         </nav>
     </div>
-    <div class="container">
+    <div class="container  mt-4">
         <div class="row">
             <div class="col-md-6 mx-auto">
                 <div class="card">
-                    <div class="card-body">
+                    <div class="card-body mt-4">
                         <form method="post">
                             {% csrf_token %}
                             {{ form.as_p }}

@@ -13,7 +13,7 @@ urlpatterns = [
         name="shop_dashboard",
     ),
     path("Account/Users/Dashboard", views.users_dashboard, name="users_dashboard"),
-    path("view/users", views.view_users, name="view_users"),
+    path("view/users", views.UserListView.as_view(), name="view_users"),
     path("add/users", views.add_users, name="add_users"),
     path("update/users/<int:pk>", views.update_users, name="update_users"),
     path("delete/users/<int:pk>", views.delete_users, name="delete_users"),
@@ -27,7 +27,20 @@ urlpatterns = [
     path("add/offers", views.add_offers, name="add_offers"),
     path("delete/offers/<int:pk>", views.delete_offers, name="delete_offers"),
     path("403/", views.unauthorized, name="403"),
+    
+    #for user
+    path("view/complaints", views.ComplaintListView.as_view(), name="view_complaints"),
+    path("add/complaints", views.add_complaints, name="add_complaints"),
+    path("update/complaints/<int:pk>", views.update_complaints, name="update_complaints"),
+    path("delete/complaints/<int:pk>", views.delete_complaints, name="delete_complaints"),
 
+    #for admin all complaint& responds
+    path("complaints/respond/<int:pk>", views.respond, name="create_respond"),
+    path("all/complaints", views.AllComplaintListView.as_view(), name="all_complaints"),
+
+    #profile
+
+ 
     
     
 ]

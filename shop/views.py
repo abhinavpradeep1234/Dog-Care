@@ -483,7 +483,7 @@ def view_booking_service_offered(request):
 class CheckUpDetailsListView(ListView):
     template_name = "view_checkup_doctors_tokens.html"
     context_object_name = "all_doctors"
-    paginate_by = 4
+    paginate_by = 3
 
     # Custom queryset if you want more control over the data displayed
     def get_queryset(self):
@@ -646,15 +646,15 @@ def delete_token_checkup_details(request, pk):
 
 
 def view_appointment(request):
-    today=timezone.now()
-    tommorow= today + timedelta(days=1)
+    today = timezone.now()
+    tommorow = today + timedelta(days=1)
     context = {
         "page_title": "All Appointment",
-        "checkups":Appointment.objects.filter(status="finished").count(),
+        "checkups": Appointment.objects.filter(status="finished").count(),
         "appointments": Appointment.objects.all(),
         "form": AppointmentStatusForm,
-        "count":Appointment.objects.filter(appointment_date=today).count(),
-        "counts":Appointment.objects.filter(appointment_date=tommorow).count()
+        "count": Appointment.objects.filter(appointment_date=today).count(),
+        "counts": Appointment.objects.filter(appointment_date=tommorow).count(),
     }
     return render(request, "view_appointment.html", context)
 
@@ -785,15 +785,15 @@ def booking_appointment(request):
 #     return render (request,"view_checkup_doctors_tokens.html",context)
 
 
-class BookingAppointment(LoginRequiredMixin, ListView):
-    model = Appointment
-    template_name = "user_checkup_booking.html"
-    extra_context = {"page_title": "Booked Appointment"}
+# class BookingAppointment(LoginRequiredMixin, ListView):
+#     model = Appointment
+#     template_name = "user_checkup_booking.html"
+#     extra_context = {"page_title": "Booked Appointment"}
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["appointments"] = Appointment.objects.filter(username=self.request.user)
-        return context
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         context["appointments"] = Appointment.objects.filter(username=self.request.user)
+#         return context
 
 
 @login_required(login_url="signup")
@@ -832,7 +832,7 @@ def delete_appointment(request, pk):
 def status_appointment(request, pk):
     to_update = get_object_or_404(Appointment, id=pk)
     if request.method == "POST":
-        form = AppointmentStatusForm(request.POST,instance=to_update)
+        form = AppointmentStatusForm(request.POST, instance=to_update)
         if form.is_valid():
             form.save()
             messages.success(
@@ -850,3 +850,45 @@ def status_appointment(request, pk):
         "form": AppointmentStatusForm(instance=to_update),
     }
     return render(request, "add_update.html", context)
+
+
+# user booking display
+
+
+class BookedService(ListView):
+    model = BookingService
+    template_name = "booking_service.html"
+    context_object_name = "all_user"
+    paginate_by = 3
+    ordering = ["-id"]
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["page_title"] = "Booked Service"
+        return context
+
+
+class BookedAccessories(ListView):
+    model = BookingAccessories
+    template_name = "booking_accessories.html"
+    context_object_name = "all_accessories"
+    paginate_by = 3
+    ordering = ["-id"]
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["page_title"] = "Booked Accessories"
+        return context
+
+
+class BookedFood(ListView):
+    model = BookingFood
+    template_name = "booking_food.html"
+    context_object_name = "all_food"
+    paginate_by = 3
+    ordering = ["-id"]
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["page_title"] = "Booked Food Products"
+        return context
