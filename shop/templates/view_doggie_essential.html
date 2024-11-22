@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+
 {% block content %}
     <div class="container">
         <nav aria-label="breadcrumb">
@@ -10,45 +11,48 @@
             </ol>
         </nav>
     </div>
-{% if request.user.role == "SHOP OWNER"%}
-    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-        <a class="btn btn-primary btn-sm" href="{% url 'add_service'%}" role="button">Add Services</a>
-        <a class="btn btn-primary btn-sm" href="{% url 'add_accessories'%}" role="button">Add Accessories</a>
-        <a class="btn btn-primary btn-sm" href="{% url 'add_food'%}" role="button">Add Food Products</a>
 
+    {% if request.user.role == "SHOP OWNER" %}
+        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+            <a class="btn btn-primary btn-sm" href="{% url 'add_service'%}" role="button">Add Services</a>
+            <a class="btn btn-primary btn-sm" href="{% url 'add_accessories'%}" role="button">Add Accessories</a>
+            <a class="btn btn-primary btn-sm" href="{% url 'add_food'%}" role="button">Add Food Products</a>
         </div>
-        {% endif %}
+    {% endif %}
 
     <style>
         .custom-card {
             width: 15rem;
             height: 250px; /* Fixed card width */
         }
+
         .custom-img {
             height: 118px; /* Fixed image height */
-            width:195px; /* Ensures images are scaled uniformly */
+            width: 195px; /* Ensures images are scaled uniformly */
+        }
+
+        .empty-section {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 50px; /* You can adjust this height based on your design */
         }
     </style>
+
     <!-- Service Section -->
     <div class="container mt-2">
         <div class="row">
             <div class="col-md-12 mx-auto">
                 <div class="card">
                     <div class="card-body">
-                   
                         {% if all_services %}
                             <h5 class="text-center mt-2">Service Offered</h5>
                             <div class="d-flex flex-wrap justify-content-start">
-                              
                                 {% for all_service in all_services %}
-                                
                                     <div class="card custom-card mb-3 me-3">
-                                        <!-- Set image size -->
                                         <div class="d-flex justify-content-center align-items-center mt-3">
-                                            <img src="{{ all_service.image.url }}"
-                                             class="card-img-top custom-img"
-                                             alt="Service image">
-                                         </div>
+                                            <img src="{{ all_service.image.url }}" class="card-img-top custom-img" alt="Service image">
+                                        </div>
                                         <div class="card-body">
                                             <h6 class="card-title text-center">{{ all_service.service_name }}</h6>
                                             <p class="text-center">
@@ -56,18 +60,13 @@
                                             </p>
                                             {% if request.user.role == "SHOP OWNER" %}
                                                 <div class="d-flex justify-content-center">
-                                                    <div class="btn-group"
-                                                         role="group"
-                                                         aria-label="Basic mixed styles example">
+                                                    <div class="btn-group" role="group" aria-label="Basic mixed styles example">
                                                         <a href="{% url 'update_service' all_service.id %}">
                                                             <button type="button" class="btn btn-success btn-sm">
                                                                 <i class="bi bi-arrow-counterclockwise "></i>Update
                                                             </button>
                                                         </a>
-                                                        <button type="button"
-                                                                class="btn btn-danger btn-sm"
-                                                                data-bs-toggle="modal"
-                                                                data-bs-target="#exampleModal{{ all_service.id }}">
+                                                        <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal{{ all_service.id }}">
                                                             <i class="bi bi-trash3"></i>Delete
                                                         </button>
                                                     </div>
@@ -76,218 +75,183 @@
                                             {% if user.role != "SHOP OWNER" %}
                                                 <div class="d-flex justify-content-center">
                                                     <a href="{% url 'booking_service_offered' all_service.id %}">
-                                                    <button class="btn btn-primary btn-sm" type="button">Book Now</button>
-                                                </a>
-                                            </div>
-                                        {% endif %}
-                                    </div>
-                                </div>
-                                <!-- Modal -->
-                                <div class="modal fade"
-                                     id="exampleModal{{ all_service.id }}"
-                                     tabindex="-1"
-                                     aria-labelledby="exampleModalLabel{{ all_service.id }}"
-                                     aria-hidden="true">
-                                    <div class="modal-dialog modal-dialog-centered">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h1 class="modal-title fs-5" id="exampleModalLabel{{ all_service.id }}">Confirm Delete</h1>
-                                                <button type="button"
-                                                        class="btn-close"
-                                                        data-bs-dismiss="modal"
-                                                        aria-label="Close"></button>
-                                            </div>
-                                            <div class="modal-body">Are You Sure You Want to Delete</div>
-                                            <div class="modal-footer">
-                                                <a href="{% url 'delete_service' all_service.id %}">
-                                                    <button type="submit" class="btn btn-danger btn-sm">Confirm Delete</button>
-                                                </a>
-                                            </div>
+                                                        <button class="btn btn-primary btn-sm" type="button">Book Now</button>
+                                                    </a>
+                                                </div>
+                                            {% endif %}
                                         </div>
                                     </div>
-                                </div>
-                            {% endfor %}
-                        {% else %}
-                            <div class="alert alert-primary text-center" role="alert">Currently No Service Added to Shop Owner</div>
-                        {% endif %}
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- Accessories Section -->
-<div class="container mt-4">
-    <div class="row">
-        <div class="col-md-12 mx-auto">
-            <div class="card">
-                <div class="card-body">
-                    {% if all_accessories %}
-                        <h5 class="text-center">All Accessories</h5>
-                        <div class="d-flex flex-wrap justify-content-start">
-                            {% for all_accessorie in all_accessories %}
-                                <div class="card custom-card mb-3 me-3">
-                                    <!-- Set image size -->
-                                    <div class="d-flex justify-content-center align-items-center mt-2">
-
-                                    <img src="{{ all_accessorie.image.url }}"
-                                         class="card-img-top custom-img"
-                                         alt="Accessory image">
-                                    </div>
-                                    <div class="card-body">
-                                        <h5 class="card-title text-center">{{ all_accessorie.accessories_name }}</h5>
-                                        <p class="text-center">
-                                            <i class="bi bi-currency-rupee"></i>{{ all_accessorie.price }}
-                                        </p>
-                                        {% if request.user.role == "SHOP OWNER" %}
-                                            <div class="d-flex justify-content-center">
-                                                <div class="btn-group"
-                                                     role="group"
-                                                     aria-label="Basic mixed styles example">
-                                                    <a href="{% url 'update_accessories' all_accessorie.id %}">
-                                                        <button type="button" class="btn btn-success btn-sm">
-                                                            <i class="bi bi-arrow-counterclockwise "></i>Update
-                                                        </button>
+                                    <!-- Modal -->
+                                    <div class="modal fade" id="exampleModal{{ all_service.id }}" tabindex="-1" aria-labelledby="exampleModalLabel{{ all_service.id }}" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h1 class="modal-title fs-5" id="exampleModalLabel{{ all_service.id }}">Confirm Delete</h1>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">Are You Sure You Want to Delete</div>
+                                                <div class="modal-footer">
+                                                    <a href="{% url 'delete_service' all_service.id %}">
+                                                        <button type="submit" class="btn btn-danger btn-sm">Confirm Delete</button>
                                                     </a>
-                                                    <button type="button"
-                                                            class="btn btn-danger btn-sm"
-                                                            data-bs-toggle="modal"
-                                                            data-bs-target="#exampleModalLabel{{ all_accessorie.id }}">
-                                                        <i class="bi bi-trash3"></i>Delete
-                                                    </button>
                                                 </div>
                                             </div>
-                                        {% endif %}
-                                        {% if request.user.role != "SHOP OWNER" %}
-                                            <div class="d-flex justify-content-center">
-                                                <a href="{% url 'booking_accessories' all_accessorie.id %}">
-                                                    <button class="btn btn-primary btn-sm" type="button">Book Now</button>
-                                                </a>
-                                            </div>
-                                        {% endif %}
-                                    </div>
-                                </div>
-                                <!-- Modal -->
-                                <div class="modal fade"
-                                     id="exampleModalLabel{{ all_accessorie.id }}"
-                                     tabindex="-1"
-                                     aria-labelledby="exampleModalLabel{{ all_accessorie.id }}"
-                                     aria-hidden="true">
-                                    <div class="modal-dialog modal-dialog-centered">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h1 class="modal-title fs-5"
-                                                    id="exampleModalLabel{{ all_accessorie.id }}">Confirm Delete</h1>
-                                                <button type="button"
-                                                        class="btn-close"
-                                                        data-bs-dismiss="modal"
-                                                        aria-label="Close"></button>
-                                            </div>
-                                            <div class="modal-body">Are You Sure You Want to Delete</div>
-                                            <div class="modal-footer">
-                                                <a href="{% url 'delete_accessories' all_accessorie.id %}">
-                                                    <button type="button" class="btn btn-danger btn-sm">Confirm Delete</button>
-                                                </a>
-                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            {% endfor %}
+                                {% endfor %}
+                            </div>
                         {% else %}
-                            <div class="alert alert-primary text-center" role="alert">Currently No Accessories Added to Shop Owner</div>
+                            <div class="alert alert-primary text-center empty-section" role="alert">
+                                Currently No Service Added to Shop Owner
+                            </div>
                         {% endif %}
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-<!-- Food Products Section -->
-<div class="container mt-4">
-    <div class="row">
-        <div class="col-md-12 mx-auto">
-            <div class="card">
-                <div class="card-body">
-                    {% if all_foods %}
-                        <h5 class="text-center">Food Products</h5>
-                        <div class="d-flex flex-wrap justify-content-start">
-                            {% for all_food in all_foods %}
-                                <div class="card custom-card mb-3 me-3">
-                                    <!-- Set image size -->
-                                    <div class="d-flex justify-content-center align-items-center mt-2">
 
-                                    <img src="{{ all_food.image.url }}"
-                                         class="card-img-top custom-img"
-                                         alt="Food image">
-                                    </div>
-                                    <div class="card-body">
-                                        <h5 class="card-title text-center">{{ all_food.Food_name }}</h5>
-                                        <p class="text-center">
-                                            <i class="bi bi-currency-rupee"></i>{{ all_food.price }}
-                                        </p>
-                                        {% if request.user.role == "SHOP OWNER" %}
-                                            <div class="d-flex justify-content-center">
-                                                <div class="btn-group"
-                                                     role="group"
-                                                     aria-label="Basic mixed styles example">
-                                                    <a href="{% url 'update_food' all_food.id %}">
-                                                        <button type="button" class="btn btn-success btn-sm">
-                                                            <i class="bi bi-arrow-counterclockwise "></i>Update
+    <!-- Accessories Section -->
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-md-12 mx-auto">
+                <div class="card">
+                    <div class="card-body">
+                        {% if all_accessories %}
+                            <h5 class="text-center">All Accessories</h5>
+                            <div class="d-flex flex-wrap justify-content-start">
+                                {% for all_accessorie in all_accessories %}
+                                    <div class="card custom-card mb-3 me-3">
+                                        <div class="d-flex justify-content-center align-items-center mt-2">
+                                            <img src="{{ all_accessorie.image.url }}" class="card-img-top custom-img" alt="Accessory image">
+                                        </div>
+                                        <div class="card-body">
+                                            <h5 class="card-title text-center">{{ all_accessorie.accessories_name }}</h5>
+                                            <p class="text-center">
+                                                <i class="bi bi-currency-rupee"></i>{{ all_accessorie.price }}
+                                            </p>
+                                            {% if request.user.role == "SHOP OWNER" %}
+                                                <div class="d-flex justify-content-center">
+                                                    <div class="btn-group" role="group" aria-label="Basic mixed styles example">
+                                                        <a href="{% url 'update_accessories' all_accessorie.id %}">
+                                                            <button type="button" class="btn btn-success btn-sm">
+                                                                <i class="bi bi-arrow-counterclockwise "></i>Update
+                                                            </button>
+                                                        </a>
+                                                        <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModalLabel{{ all_accessorie.id }}">
+                                                            <i class="bi bi-trash3"></i>Delete
                                                         </button>
+                                                    </div>
+                                                </div>
+                                            {% endif %}
+                                            {% if request.user.role != "SHOP OWNER" %}
+                                                <div class="d-flex justify-content-center">
+                                                    <a href="{% url 'booking_accessories' all_accessorie.id %}">
+                                                        <button class="btn btn-primary btn-sm" type="button">Book Now</button>
                                                     </a>
-                                                    <button type="button"
-                                                            class="btn btn-danger btn-sm"
-                                                            data-bs-toggle="modal"
-                                                            data-bs-target="#exampleModalLabel{{ all_food.id }}">
-                                                        <i class="bi bi-trash3"></i>Delete
-                                                    </button>
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <!-- Modal -->
+                                    <div class="modal fade" id="exampleModalLabel{{ all_accessorie.id }}" tabindex="-1" aria-labelledby="exampleModalLabel{{ all_accessorie.id }}" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h1 class="modal-title fs-5" id="exampleModalLabel{{ all_accessorie.id }}">Confirm Delete</h1>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">Are You Sure You Want to Delete</div>
+                                                <div class="modal-footer">
+                                                    <a href="{% url 'delete_accessories' all_accessorie.id %}">
+                                                        <button type="button" class="btn btn-danger btn-sm">Confirm Delete</button>
+                                                    </a>
                                                 </div>
                                             </div>
-                                        {% endif %}
-                                        {% if request.user.role != "SHOP OWNER" %}
-                                            <div class="d-flex justify-content-center">
-                                               <a href="{% url 'booking_food' all_food.id %}">
-                                                    <button class="btn btn-primary btn-sm" type="button">Book Now</button>
-                                                </a> 
-                                                <a href="{% url 'booking_food'  all_food.id %}">
-                                                    <button class="btn btn-primary btn-sm" type="button">Book Now</button>
-                                                </a>
-                                            </div>
-                                       {% endif %} 
-                                    </div>
-                                </div>
-                                <!-- Modal -->
-                                <div class="modal fade"
-                                     id="exampleModalLabel{{ all_food.id }}"
-                                     tabindex="-1"
-                                     aria-labelledby="exampleModalLabel{{ all_food.id }}"
-                                     aria-hidden="true">
-                                    <div class="modal-dialog modal-dialog-centered">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h1 class="modal-title fs-5" id="exampleModalLabel{{ all_food.id }}">Confirm Delete</h1>
-                                                <button type="button"
-                                                        class="btn-close"
-                                                        data-bs-dismiss="modal"
-                                                        aria-label="Close"></button>
-                                            </div>
-                                            <div class="modal-body">Are You Sure You Want to Delete</div>
-                                            <div class="modal-footer">
-                                                <a href="{% url 'delete_food' all_food.id %}">
-                                                    <button type="button" class="btn btn-danger btn-sm">Confirm Delete</button>
-                                                </a>
-                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            {% endfor %}
+                                {% endfor %}
+                            </div>
                         {% else %}
-                            <div class="alert alert-primary text-center " role="alert">Currently No Food Product Added to Shop Owner</div>
+                            <div class="alert alert-primary text-center empty-section" role="alert">
+                                Currently No Accessories Added to Shop Owner
+                            </div>
                         {% endif %}
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-{% endblock content %}
+
+    <!-- Food Products Section -->
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-md-12 mx-auto">
+                <div class="card">
+                    <div class="card-body">
+                        {% if all_foods %}
+                            <h5 class="text-center">Food Products</h5>
+                            <div class="d-flex flex-wrap justify-content-start">
+                                {% for all_food in all_foods %}
+                                    <div class="card custom-card mb-3 me-3">
+                                        <div class="d-flex justify-content-center align-items-center mt-2">
+                                            <img src="{{ all_food.image.url }}" class="card-img-top custom-img" alt="Food image">
+                                        </div>
+                                        <div class="card-body">
+                                            <h5 class="card-title text-center">{{ all_food.Food_name }}</h5>
+                                            <p class="text-center">
+                                                <i class="bi bi-currency-rupee"></i>{{ all_food.price }}
+                                            </p>
+                                            {% if request.user.role == "SHOP OWNER" %}
+                                                <div class="d-flex justify-content-center">
+                                                    <div class="btn-group" role="group" aria-label="Basic mixed styles example">
+                                                        <a href="{% url 'update_food' all_food.id %}">
+                                                            <button type="button" class="btn btn-success btn-sm">
+                                                                <i class="bi bi-arrow-counterclockwise "></i>Update
+                                                            </button>
+                                                        </a>
+                                                        <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModalLabel{{ all_food.id }}">
+                                                            <i class="bi bi-trash3"></i>Delete
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            {% endif %}
+                                            {% if request.user.role != "SHOP OWNER" %}
+                                                <div class="d-flex justify-content-center">
+                                                    <a href="{% url 'booking_food' all_food.id %}">
+                                                        <button class="btn btn-primary btn-sm" type="button">Book Now</button>
+                                                    </a>
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <!-- Modal -->
+                                    <div class="modal fade" id="exampleModalLabel{{ all_food.id }}" tabindex="-1" aria-labelledby="exampleModalLabel{{ all_food.id }}" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h1 class="modal-title fs-5" id="exampleModalLabel{{ all_food.id }}">Confirm Delete</h1>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">Are You Sure You Want to Delete</div>
+                                                <div class="modal-footer">
+                                                    <a href="{% url 'delete_food' all_food.id %}">
+                                                        <button type="submit" class="btn btn-danger btn-sm">Confirm Delete</button>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <div class="alert alert-primary text-center empty-section" role="alert">
+                                Currently No Food Product Added to Shop Owner
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

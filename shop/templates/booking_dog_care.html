@@ -27,10 +27,10 @@
                                     <label>Quantity:</label>
                                     {{ form.quantity }}
                                     <br>
-                                    <p class ="text-center text-success">
+                                    <p class="text-center text-success">
                                         Total price: <span id="total_price">0</span>
                                     </p>
-                                    <p class ="text-center text-danger">
+                                    <p class="text-center text-danger">
                                         Total Stock: <span id="total_stock`">{{ all_accessorie.total_stock }}</span>
                                     </p>
                                 {% endif %}
@@ -44,10 +44,10 @@
                                     <label>Quantity:</label>
                                     {{ form.quantity }}
                                     <br>
-                                    <p class ="text-center text-success">
+                                    <p class="text-center text-success">
                                         Total price: <span id="total_price">0</span>
                                     </p>
-                                    <p class ="text-center text-danger">
+                                    <p class="text-center text-danger">
                                         <p class="text-center">Total Stock : {{ all_food.total_stock|default:"0" }}</p>
                                     </p>
                                 {% endif %}
@@ -59,7 +59,8 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> 
+           </div>
         <script>
       // Function to calculate total price
 function calculateTotalPrice() {

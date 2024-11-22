@@ -150,6 +150,8 @@ class BookingAppointmentForm(forms.ModelForm):
                 attrs={"class": "form-control", "type": "date"}
             )
         }
+ 
+        
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -162,6 +164,9 @@ class BookingAppointmentForm(forms.ModelForm):
         max_date = (today + timedelta(days=2)).strftime("%Y-%m-%d")
 
         self.fields["appointment_date"].widget.attrs["max"] = max_date
+        for field in self.fields:
+            self.fields[field].widget.attrs.update({"class": "form-control"})
+
 
 
 
@@ -183,3 +188,11 @@ class ServiceTokenForm(forms.ModelForm):
     class Meta:
         model = TokenService
         fields = ["token", "available"]
+        
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        for field in self.fields:
+            self.fields[field].widget.attrs.update({"class": "form-control"})
+
+

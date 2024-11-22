@@ -484,6 +484,9 @@ class CheckUpDetailsListView(ListView):
     template_name = "view_checkup_doctors_tokens.html"
     context_object_name = "all_doctors"
     paginate_by = 3
+    ordering=['id']
+
+    
 
     # Custom queryset if you want more control over the data displayed
     def get_queryset(self):
