@@ -6,11 +6,11 @@
                 <li class="breadcrumb-item">
                     <a href="{% url 'home' %}" class="text-decoration-none text-black"><i class="bi bi-house-door-fill"></i></a>
                 </li>
-                {% if request.user.role == "SHOP OWNER"%}
-                <li class="breadcrumb-item">
-                    <a href="{% url 'shop_dashboard' %}"
-                       class="text-decoration-none text-black">Owner Dashboard</a>
-                </li>
+                {% if request.user.role == "SHOP OWNER" %}
+                    <li class="breadcrumb-item">
+                        <a href="{% url 'shop_dashboard' %}"
+                           class="text-decoration-none text-black">Owner Dashboard</a>
+                    </li>
                 {% endif %}
                 <li class="breadcrumb-item active " aria-current="page">{{ page_title }}</li>
             </ol>
@@ -24,7 +24,10 @@
                         <form method="post">
                             {% csrf_token %}
                             {{ form.as_p }}
+                            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+
                             <button type="submit" class="btn btn-primary btn-sm">{{ page_title }}</button>
+                            </div>
                         </form>
                     </div>
                 </div>

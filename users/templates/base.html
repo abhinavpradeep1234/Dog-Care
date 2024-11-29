@@ -1,102 +1,3 @@
-{% comment %} <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Dog Care : {{ page_title }}</title>
-        <!-- Bootstrap CSS -->
-        <!-- Add this to your <head> section to include Bootstrap Icons -->
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-        <style>
-        /* Custom styling to enhance the appearance of the offcanvas */
-        .offcanvas-start {
-            width: 250px;
-        }
-</style>
-    </head>
-    <body>
-        <!-- Navbar (Top) -->
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-            <div class="container-fluid">
-                <!-- Button to toggle the offcanvas -->
-                <button class="btn btn-outline-light me-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasMenu" aria-controls="offcanvasMenu">
-                    <i class="bi bi-list"></i>
-                </button>
-                <a class="navbar-brand me-2" href="#">{{ page_title }} / Dog Care</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <!-- Right-side menu in navbar -->
-                <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav ms-auto">
-                        <li class="nav-item">
-                            <a class="nav-link active" href="#">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link active" href="{% url 'dashboard' %}">dashboard</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Services</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Contact</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-        <!-- Offcanvas Sidebar (Left) -->
-        <div class="offcanvas offcanvas-start bg-dark text-white" tabindex="-1" id="offcanvasMenu" aria-labelledby="offcanvasMenuLabel">
-            <div class="offcanvas-header">
-                <h5 class="offcanvas-title" id="offcanvasMenuLabel">Dog Care System</h5>
-                <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-            </div>
-            <div class="offcanvas-body">
-                <ul class="nav flex-column">
-                    <li class="nav-item">
-                        <a class="nav-link text-white" href="#">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active text-decoration-none text-white" href="{% url 'dashboard' %}">Dashboard</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-white" href="{% url 'notification' %}">Notification</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-white" href="{% url 'booking_appointment' %}">Check UP</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-white" href="{% url 'view_offers' %}">Offers</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-white" href="{% url 'view_shop' %}">Dogges Essential</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-white" href="{% url 'add_service' %}">Dogges Essential</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-white" href="{% url 'add_accessories' %}">Dogges Essential</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-white" href="{% url 'add_food' %}">Dogges Essential</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-        <div class="container mt-3">
-            {% if messages %}
-                {% for message in messages %}
-                    <div {% if message.extra_tags %}class="text-center w-100 alert {{ message.tags }}"{% endif %} role="alert">{{ message }}</div>
-                {% endfor %}
-            {% endif %}
-        </div>
-        <!-- Main content to simulate scrolling -->
-        {% block content %}
-        {% endblock content %}
-        <!-- Bootstrap JS -->
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    </body>
-</html> {% endcomment %}
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -196,7 +97,9 @@
         <li class="nav-item">
           <a class="nav-link active text-decoration-none text-white"
              href="{% url 'notification' %}">
-            <i class="bi bi-bell-fill fs-5"></i><span class="ms-3">Notification</span>
+            <i class="bi bi-bell-fill fs-5"></i>
+            <span class="ms-3">Notification</span>
+            <span class="badge bg-danger ms-2">{{ counts }}</span> <!-- Example badge -->
           </a>
         </li>
         <li class="nav-item">
@@ -236,7 +139,7 @@
               </a>
               <ul class="dropdown-menu dropdown-menu-end">
                 <li>
-                  <a class="dropdown-item" href="#">Profile</a>
+                  <a class="dropdown-item" href="{% url 'profile' %}">Profile</a>
                 </li>
                 <li>
                   <hr class="dropdown-divider">

@@ -60,7 +60,7 @@ urlpatterns = [
     ),
     # Appointment for Checkup
     # all appointment in admin
-    path("view/Appointment/Booking", views.view_appointment, name="view_appointment"),
+    path("view/Appointment/Booking", views.AppointmentListView.as_view(), name="view_appointment"),
     path("Appointment/Booking", views.booking_appointment, name="booking_appointment"),
     path(
         "Booking/ServiceOffered/<int:pk>",

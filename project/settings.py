@@ -57,7 +57,7 @@ ROOT_URLCONF = "project.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": ["templates"],
+        "DIRS": [BASE_DIR, "templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -141,3 +141,16 @@ AUTH_USER_MODEL = "users.CustomUser"
 
 MEDIA_ROOT_BASE = "upload"
 MEDIA_URL = "/media/"
+# Email configurations
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+
+EMAIL_HOST = "smtp.gmail.com"
+
+EMAIL_PORT = 587
+
+EMAIL_HOST_USER = "smartpublictoilets@gmail.com"# Your Email
+
+
+EMAIL_HOST_PASSWORD = "nirx bvfw gwhx bjju"  # your App password
+
+EMAIL_USE_TLS = True

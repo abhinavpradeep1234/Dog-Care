@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
-
+    {% load static %}
     <div class="container ms-2 mt-4">
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb fs-4">
@@ -47,43 +47,81 @@
     {% endif %}
     <div class="container">
         {% if all_offers %}
-            {% for all_offer in all_offers %}
-                <div class="alert alert-primary" role="alert">
-                    Dog Care--{{ all_offer.offers }}--{{ all_offer.time }}
-                    {% if request.user.role == "SHOP OWNER" %}
-                        <button type="button"
-                                class="btn btn-primary btn-danger btn-sm"
-                                data-bs-toggle="modal"
-                                data-bs-target="#exampleModalLabel{{ all_offer.id }}">Delete</button>
-                    {% endif %}
-                </div>
-                <!-- Modal -->
-                <div class="modal fade"
-                     id="exampleModalLabel{{ all_offer.id }}"
-                     tabindex="-1"
-                     aria-labelledby="exampleModalLabel{{ all_offer.id }}"
-                     aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h1 class="modal-title fs-5" id="exampleModalLabel{{ all_offer.id }}">Delete</h1>
-                                <button type="button"
-                                        class="btn-close"
-                                        data-bs-dismiss="modal"
-                                        aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">Are you sure You wnat to Delete</div>
-                            <div class="modal-footer">
-                                <a href="{% url 'delete_offers' all_offer.id %}">
-                                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-                                </a>
+            <div id="offersCarousel" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    {% for all_offer in all_offers %}
+                        <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                            <div class="container-fluid mt-2"
+                                 style="background-image: url('{% static 'image/op.jpg' %}');
+                                        background-size: cover;
+                                        background-repeat: no-repeat;
+                                        position: relative;
+                                        padding: 50px 0">
+                                <div class="container py-2">
+                                    <div class="row gx-5 justify-content-start">
+                                        <div class="col-lg-7">
+                                            <div class="ps-5 mb-5">
+                                                <h6 class="text-dark text-uppercase">Special Offer</h6>
+                                                <h1 class="display-5 text-uppercase text-white mb-0">{{ all_offer.offers }} -- {{ all_offer.time }}</h1>
+                                            </div>
+                                            <a href="{% url 'view_shop' %}" class="btn btn-light  btn-sm">Shop Now</a>
+                                            {% if request.user.role == "SHOP OWNER" %}
+                                                <button type="button"
+                                                        class="btn btn-primary btn-danger btn-sm"
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#exampleModalLabel{{ all_offer.id }}">
+                                                    Delete
+                                                </button>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                        <!-- Modal for deletion -->
+                        <div class="modal fade"
+                             id="exampleModalLabel{{ all_offer.id }}"
+                             tabindex="-1"
+                             aria-labelledby="exampleModalLabel{{ all_offer.id }}"
+                             aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h1 class="modal-title fs-5" id="exampleModalLabel{{ all_offer.id }}">Delete</h1>
+                                        <button type="button"
+                                                class="btn-close"
+                                                data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">Are you sure you want to delete this offer?</div>
+                                    <div class="modal-footer">
+                                        <a href="{% url 'delete_offers' all_offer.id %}">
+                                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
                 </div>
-            {% endfor %}
-        </div>
-    {% else %}
-        <div class="alert alert-warning mt-3 text-center" role="alert">Currently No New Offers</div>
-    {% endif %}
+                <!-- Carousel Controls -->
+                <button class="carousel-control-prev"
+                        type="button"
+                        data-bs-target="#offersCarousel"
+                        data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next"
+                        type="button"
+                        data-bs-target="#offersCarousel"
+                        data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+        {% else %}
+            <div class="alert alert-warning mt-3 text-center" role="alert">Currently No New Offers</div>
+        {% endif %}
+    </div>
 {% endblock content %}

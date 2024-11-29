@@ -90,3 +90,16 @@ class ComplaintRespondForm(forms.ModelForm):
         model = Complaints
         fields = ["responds"]
         widgets = {"responds": forms.TextInput(attrs={"class": "form-control"})}
+
+
+class ProfileForm(forms.ModelForm):
+    class Meta:
+        model = CustomUser
+        fields = ["username", "first_name", "last_name", "email"]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields:
+            self.fields[field].widget.attrs.update({"class": "form-control"})
+
+        self.fields["username"].help_text = " "

@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
+{% if request.user.role == "SHOP OWNER"%}
+
     <div class="container ms-2 ">
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb fs-4">
@@ -14,10 +16,9 @@
             </ol>
         </nav>
     </div>
-
     <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-        <a href="{% url 'view_checkup_details'%}" class="btn btn-primary btn-sm">Checkup Details</a>
-
+        <a href="{% url 'view_checkup_details' %}"
+           class="btn btn-primary btn-sm">Checkup Details</a>
     </div>
     <div class="container ms-4 mt-4">
         <div class="row">
@@ -122,8 +123,10 @@
                     </div>
                 {% endfor %}
             </table>
+            {% include "pagination.html" %}
         </div>
     {% else %}
         <div class="alert alert-success text-center" role="alert">Currently No Booked Appointment!!</div>
-    {% endif %}
+        {% endif %}   
+         {% endif %}
 {% endblock content %}

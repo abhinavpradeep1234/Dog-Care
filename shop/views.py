@@ -5,7 +5,9 @@ from django.utils import timezone
 from django.views.generic import ListView
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from users.models import CustomUser, Notification
 
+from users.utils import create_notification
 from django.core.exceptions import ValidationError
 from shop.models import (
     ServiceOffered,
@@ -44,6 +46,9 @@ def view_shop(request):
         "all_services": ServiceOffered.objects.all(),
         "all_accessories": Accessories.objects.all(),
         "all_foods": DogFood.objects.all(),
+        "counts": Notification.objects.filter(
+            is_read=False, username=request.user
+        ).count(),
     }
     return render(request, "view_doggie_essential.html", context)
 
@@ -61,6 +66,9 @@ def add_service(request):
                 messages.success(
                     request, "Service Added Successfully", extra_tags="alert-success"
                 )
+                users = CustomUser.objects.all()
+                for user in users:
+                    create_notification(user, "New Service is Added check it now")
                 return redirect("shop_dashboard")
             else:
                 for error_list in form.errors.values():
@@ -70,6 +78,9 @@ def add_service(request):
             "form": ServiceOfferedForm(),
             "page_title": "Add Service",
             "stock": True,
+            "counts": Notification.objects.filter(
+                is_read=False, username=request.user
+            ).count(),
         }
 
         return render(request, "add_update.html", context)
@@ -97,6 +108,9 @@ def update_service(request, pk):
         context = {
             "form": ServiceOfferedForm(instance=to_update),
             "page_title": "Update Service",
+            "counts": Notification.objects.filter(
+                is_read=False, username=request.user
+            ).count(),
         }
 
         return render(request, "add_update.html", context)
@@ -128,6 +142,9 @@ def add_accessories(request):
                     "Accessories Added Successfully",
                     extra_tags="alert-success",
                 )
+                users = CustomUser.objects.all()
+                for user in users:
+                    create_notification(user, "New Accessories is Added check it now")
                 return redirect("shop_dashboard")
             else:
                 for error_list in form.errors.values():
@@ -137,6 +154,9 @@ def add_accessories(request):
             "page_title": "Add Accessories",
             "form": AccessoriesForm(),
             "total_stock": Accessories.objects.all(),
+            "counts": Notification.objects.filter(
+                is_read=False, username=request.user
+            ).count(),
         }
         return render(request, "add_update.html", context)
     return redirect("403")
@@ -163,6 +183,9 @@ def update_accessories(request, pk):
         context = {
             "page_title": "Update Accessories",
             "form": AccessoriesForm(instance=to_update),
+            "counts": Notification.objects.filter(
+                is_read=False, username=request.user
+            ).count(),
         }
 
         return render(request, "add_update.html", context)
@@ -196,12 +219,21 @@ def add_food(request):
                     "Food Products Added Successfully",
                     extra_tags="alert-success",
                 )
+                users = CustomUser.objects.all()
+                for user in users:
+                    create_notification(user, "New Food Products is Added check it now")
                 return redirect("shop_dashboard")
             else:
                 for error_list in form.errors.values():
                     for errors in error_list:
                         messages.error(request, errors, extra_tags="alert-danger")
-        context = {"page_title": "Add Food Products", "form": DogFoodForm()}
+        context = {
+            "page_title": "Add Food Products",
+            "form": DogFoodForm(),
+            "counts": Notification.objects.filter(
+                is_read=False, username=request.user
+            ).count(),
+        }
         return render(request, "add_update.html", context)
     return redirect("403")
 
@@ -228,6 +260,9 @@ def update_food(request, pk):
         context = {
             "page_title": "Update Food Products",
             "form": DogFoodForm(instance=to_update),
+            "counts": Notification.objects.filter(
+                is_read=False, username=request.user
+            ).count(),
         }
         return render(request, "add_update.html", context)
     return redirect("403")
@@ -267,7 +302,13 @@ def add_token_service_offered(request):
                     for errors in error_list:
                         messages.error(request, errors, extra_tags="alert-danger")
 
-        context = {"page_title": "Add Token", "form": ServiceTokenForm}
+        context = {
+            "page_title": "Add Token",
+            "form": ServiceTokenForm,
+            "counts": Notification.objects.filter(
+                is_read=False, username=request.user
+            ).count(),
+        }
         return render(request, "add_update.html", context)
     return redirect("403")
 
@@ -295,6 +336,9 @@ def update_token_service_offered(request, pk):
         context = {
             "page_title": "Add Token",
             "form": ServiceTokenForm(instance=to_update),
+            "counts": Notification.objects.filter(
+                is_read=False, username=request.user
+            ).count(),
         }
         return render(request, "add_update.html", context)
     return redirect("403")
@@ -340,6 +384,16 @@ def booking_service_offered(request, pk):
                 "Your Booking Successfully, Delivery Expected Two Days",
                 extra_tags="alert-success",
             )
+            create_notification(
+                request.user,
+                f"Your {booking_service.service_name} Booking Successfully",
+            )
+            admins = CustomUser.objects.filter(role="SHOP OWNER")
+            for admin in admins:
+                create_notification(
+                    admin,
+                    f" The user {request.user} booked {booking_service.service_name} check it now",
+                )
             return redirect("dashboard")
 
         else:
@@ -354,6 +408,9 @@ def booking_service_offered(request, pk):
         "page_title": "Service Booking",
         "form": form,
         "all_service": all_service,
+        "counts": Notification.objects.filter(
+            is_read=False, username=request.user
+        ).count(),
     }
 
     return render(request, "add_update.html", context)
@@ -392,7 +449,19 @@ def booking_accessories(request, pk):
                         "Your booking was successful! Delivery expected in 2 days.",
                         extra_tags="alert-success",
                     )
+
+                    create_notification(
+                        request.user,
+                        f"Your {books.accessories_name} Booking Successfully",
+                    )
+                    admins = CustomUser.objects.filter(role="SHOP OWNER")
+                    for admin in admins:
+                        create_notification(
+                            admin,
+                            f" The user {request.user} booked {books.accessories_name} check it now",
+                        )
                     return redirect("dashboard")
+
             except ValidationError as e:
                 messages.error(request, f"{e}", extra_tags="alert-danger")
 
@@ -411,6 +480,9 @@ def booking_accessories(request, pk):
         "all_accessorie": all_accessorie,
         "stock": True,
         "accessories": True,
+        "counts": Notification.objects.filter(
+            is_read=False, username=request.user
+        ).count(),
     }
     return render(request, "booking_dog_care.html", context)
 
@@ -443,8 +515,18 @@ def booking_food(request, pk):
                         "Booking Successfully Delivery Expected 2 Days",
                         extra_tags="alert-success",
                     )
+                    create_notification(
+                        request.user,
+                        f"Your {booking.Food_name} Booking Successfully",
+                    )
+                    admins = CustomUser.objects.filter(role="SHOP OWNER")
+                    for admin in admins:
+                        create_notification(
+                            admin,
+                            f" The user {request.user} booked {booking.Food_name} check it now",
+                        )
 
-                    return redirect("shop_dashboard")
+                    return redirect("dashboard")
 
             except ValidationError as e:
                 messages.error(request, f"{e}", extra_tags="alert-danger")
@@ -461,11 +543,15 @@ def booking_food(request, pk):
         "page_title": "Food Product Booking",
         "all_food": all_food,
         "food": True,
+        "counts": Notification.objects.filter(
+            is_read=False, username=request.user
+        ).count(),
     }
 
     return render(request, "booking_dog_care.html", context)
 
 
+#############$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$&&&&&&&&&&*********************
 @login_required(login_url="signup")
 def view_booking_service_offered(request):
     context = {
@@ -473,20 +559,29 @@ def view_booking_service_offered(request):
         "all_users": BookingService.objects.all(),
         "all_accessories": BookingAccessories.objects.all(),
         "all_foods": BookingFood.objects.all(),
+        "counts": Notification.objects.filter(
+            is_read=False, username=request.user
+        ).count(),
     }
     return render(request, "view_service_booking.html", context)
+
+
+#############$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$&&&&&&&&&&*********************
 
 
 #  Doctor/Token CRUD
 
 
-class CheckUpDetailsListView(ListView):
+class CheckUpDetailsListView(LoginRequiredMixin, ListView):
     template_name = "view_checkup_doctors_tokens.html"
     context_object_name = "all_doctors"
     paginate_by = 3
-    ordering=['id']
+    ordering = ["id"]
 
-    
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.role != "SHOP OWNER":
+            return redirect("403")
+        return super().dispatch(request, *args, **kwargs)
 
     # Custom queryset if you want more control over the data displayed
     def get_queryset(self):
@@ -497,6 +592,10 @@ class CheckUpDetailsListView(ListView):
         context["page_title"] = "View Checkup Details"
         context["all_tokens"] = Token.objects.all()
         context["all_tokens_services"] = TokenService.objects.all()
+        context["counts"] =Notification.objects.filter(
+                is_read=False, username=self.request.user
+            ).count()
+
         return context
 
 
@@ -540,7 +639,13 @@ def add_doctors_checkup_details(request):
                     for errors in error_list:
                         messages.error(request, errors, extra_tags="alert-danger")
 
-        context = {"page_title": "Add Doctors Details", "form": DoctorsForm()}
+        context = {
+            "page_title": "Add Doctors Details",
+            "form": DoctorsForm(),
+            "counts": Notification.objects.filter(
+                is_read=False, username=request.user
+            ).count(),
+        }
         return render(request, "add_update.html", context)
     return redirect("404")
 
@@ -567,6 +672,9 @@ def update_doctors_checkup_details(request, pk):
         context = {
             "page_title": "Update Doctors Details",
             "form": DoctorsForm(instance=to_update),
+            "counts": Notification.objects.filter(
+                is_read=False, username=request.user
+            ).count(),
         }
         return render(request, "add_update.html", context)
     return redirect("404")
@@ -585,24 +693,33 @@ def delete_doctors_checkup_details(request, pk):
     return redirect("404")
 
 
+@login_required(login_url="signup")
 def add_token_checkup_details(request):
-    if request.method == "POST":
-        form = TokenForm(request.POST)
-        if form.is_valid():
-            form.save()
-            messages.success(
-                request,
-                "Token Added Successfully",
-                extra_tags="alert-success",
-            )
-            return redirect("shop_dashboard")
-        else:
-            for error_list in form.errors.values():
-                for errors in error_list:
-                    messages.error(request, errors, extra_tags="alert-danger")
+    if request.user.role == "SHOP OWNER":
+        if request.method == "POST":
+            form = TokenForm(request.POST)
+            if form.is_valid():
+                form.save()
+                messages.success(
+                    request,
+                    "Token Added Successfully",
+                    extra_tags="alert-success",
+                )
+                return redirect("shop_dashboard")
+            else:
+                for error_list in form.errors.values():
+                    for errors in error_list:
+                        messages.error(request, errors, extra_tags="alert-danger")
 
-    context = {"page_title": "Add Token Details", "form": TokenForm()}
-    return render(request, "add_update.html", context)
+        context = {
+            "page_title": "Add Token Details",
+            "form": TokenForm(),
+            "counts": Notification.objects.filter(
+                is_read=False, username=request.user
+            ).count(),
+        }
+        return render(request, "add_update.html", context)
+    return redirect("403")
 
 
 @login_required(login_url="signup")
@@ -627,6 +744,9 @@ def update_token_checkup_details(request, pk):
         context = {
             "page_title": "Update Token Details",
             "form": TokenForm(instance=to_update),
+            "counts": Notification.objects.filter(
+                is_read=False, username=request.user
+            ).count(),
         }
         return render(request, "add_update.html", context)
     return redirect("404")
@@ -646,20 +766,35 @@ def delete_token_checkup_details(request, pk):
 
 
 # appointment
+class AppointmentListView(LoginRequiredMixin, ListView):
+    model = Appointment
+    form_class = AppointmentStatusForm
+    template_name = "view_appointment.html"
+    paginate_by = 6
+    ordering = ["-id"]
+    context_object_name = "appointments"
 
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.role != "SHOP OWNER":
+            return redirect("403")
+        return super().dispatch(request, *args, **kwargs)
 
-def view_appointment(request):
-    today = timezone.now()
-    tommorow = today + timedelta(days=1)
-    context = {
-        "page_title": "All Appointment",
-        "checkups": Appointment.objects.filter(status="finished").count(),
-        "appointments": Appointment.objects.all(),
-        "form": AppointmentStatusForm,
-        "count": Appointment.objects.filter(appointment_date=today).count(),
-        "counts": Appointment.objects.filter(appointment_date=tommorow).count(),
-    }
-    return render(request, "view_appointment.html", context)
+    def get_context_data(self, **kwargs):
+        today = timezone.now().date()
+        tommorow = today + timedelta(days=1)
+
+        context = super().get_context_data(**kwargs)
+        context["page_title"] = "All Appointment"
+        context["checkups"] = Appointment.objects.filter(status="finished").count()
+        context["count"] = Appointment.objects.filter(appointment_date=today).count()
+        context["counts"] = Appointment.objects.filter(
+            appointment_date=tommorow
+        ).count()
+        context["counts"] =Notification.objects.filter(
+                is_read=False, username=self.request.user
+            ).count()
+
+        return context
 
 
 from django.utils import timezone
@@ -670,6 +805,7 @@ from .models import Token, TokenAvailability, Appointment
 from shop.forms import BookingAppointmentForm
 
 
+@login_required(login_url="signup")
 def booking_appointment(request):
     today = timezone.localtime().date()
     form = BookingAppointmentForm()
@@ -702,6 +838,16 @@ def booking_appointment(request):
                         "Your Appointment Booking was Successful",
                         extra_tags="alert-success",
                     )
+                    create_notification(
+                        request.user,
+                        f"Your {appointment.Token} Booking Successfully",
+                    )
+                    admins = CustomUser.objects.filter(role="SHOP OWNER")
+                    for admin in admins:
+                        create_notification(
+                            admin,
+                            f" The user {request.user} booked token --{appointment.Token} in - {appointment.appointment_date} check it now",
+                        )
                     return redirect("dashboard")
                 else:
                     messages.error(
@@ -727,6 +873,9 @@ def booking_appointment(request):
         "page_title": "Appointment Booking",
         "form": form,
         "available_tokens": available_tokens,
+        "counts": Notification.objects.filter(
+            is_read=False, username=request.user
+        ).count(),
     }
     return render(request, "add_update.html", context)
 
@@ -817,6 +966,9 @@ def update_appointment(request, pk):
     context = {
         "page_title": "Edit Appointment",
         "form": BookingAppointmentForm(instance=to_update),
+        "counts": Notification.objects.filter(
+            is_read=False, username=request.user
+        ).count(),
     }
     return render(request, "add_update.html", context)
 
@@ -825,6 +977,7 @@ def update_appointment(request, pk):
 def delete_appointment(request, pk):
     to_delete = get_object_or_404(Appointment, id=pk)
     to_delete.delete()
+
     messages.success(
         request, "Appointment Cancel SuccessFully", extra_tags="alert-success"
     )
@@ -833,65 +986,98 @@ def delete_appointment(request, pk):
 
 @login_required(login_url="signup")
 def status_appointment(request, pk):
-    to_update = get_object_or_404(Appointment, id=pk)
-    if request.method == "POST":
-        form = AppointmentStatusForm(request.POST, instance=to_update)
-        if form.is_valid():
-            form.save()
-            messages.success(
-                request,
-                "Appointment Status Updated SuccessFully",
-                extra_tags="alert-success",
-            )
-            return redirect("dashboard")
-        else:
-            for error_list in form.errors.values():
-                for errors in error_list:
-                    messages.error(request, errors, extra_tags="alert-danger")
-    context = {
-        "page_title": " Appointment Status",
-        "form": AppointmentStatusForm(instance=to_update),
-    }
-    return render(request, "add_update.html", context)
+    if request.user.role == "SHOP OWNER":
+        to_update = get_object_or_404(Appointment, id=pk)
+        notify = to_update.username
+        if request.method == "POST":
+            form = AppointmentStatusForm(request.POST, instance=to_update)
+            if form.is_valid():
+                form.save()
+                messages.success(
+                    request,
+                    "Appointment Status Updated SuccessFully",
+                    extra_tags="alert-success",
+                )
+                create_notification(
+                    notify, f"Authority Change the  status  to {to_update.status}"
+                )
+                admins = CustomUser.objects.filter(role="SHOP OWNER")
+                for admin in admins:
+                    create_notification(admin, f"you change the status")
+                return redirect("dashboard")
+            else:
+                for error_list in form.errors.values():
+                    for errors in error_list:
+                        messages.error(request, errors, extra_tags="alert-danger")
+        context = {
+            "page_title": " Appointment Status",
+            "form": AppointmentStatusForm(instance=to_update),
+            "counts": Notification.objects.filter(
+                is_read=False, username=request.user
+            ).count(),
+        }
+        return render(request, "add_update.html", context)
+    return redirect("403")
 
 
 # user booking display
 
 
-class BookedService(ListView):
+class BookedService(LoginRequiredMixin, ListView):
     model = BookingService
     template_name = "booking_service.html"
     context_object_name = "all_user"
     paginate_by = 3
     ordering = ["-id"]
 
+    def get_queryset(self):
+        return BookingService.objects.filter(username=self.request.user)
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["page_title"] = "Booked Service"
+        context["counts"] =Notification.objects.filter(
+                is_read=False, username=self.request.user
+            ).count()
+
         return context
 
 
-class BookedAccessories(ListView):
+class BookedAccessories(LoginRequiredMixin, ListView):
     model = BookingAccessories
     template_name = "booking_accessories.html"
     context_object_name = "all_accessories"
     paginate_by = 3
     ordering = ["-id"]
 
+    def get_queryset(self):
+        return BookingAccessories.objects.filter(username=self.request.user)
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["page_title"] = "Booked Accessories"
+        context["counts"] =Notification.objects.filter(
+                is_read=False, username=self.request.user
+            ).count()
+
         return context
 
 
-class BookedFood(ListView):
+class BookedFood(LoginRequiredMixin, ListView):
     model = BookingFood
     template_name = "booking_food.html"
     context_object_name = "all_food"
     paginate_by = 3
     ordering = ["-id"]
 
+    def get_queryset(self):
+        return BookingFood.objects.filter(username=self.request.user)
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["page_title"] = "Booked Food Products"
+        context["counts"] =Notification.objects.filter(
+                is_read=False, username=self.request.user
+            ).count()
+
         return context

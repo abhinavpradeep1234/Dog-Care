@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% block content %}
+    <div class="container ">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb fs-4">
+                <li class="breadcrumb-item">
+                    <a href="{% url 'home' %}" class="text-decoration-none text-black"><i class="bi bi-house-door-fill"></i></a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">{{ page_title }}</li>
+            </ol>
+        </nav>
+    </div>
+
+
+    <div class="text-center m-3">
+        <h5>Profile Details</h5>
+    </div>
+    <div class="row d-flex justify-content-center" >
+        {% comment %} <div class="col-3 text-center">
+            <div class="mx-auto border-primary">
+                <img src="{{ user.image.url }}"
+                     class="rounded-circle d-block mx-auto"
+                     style="width: 130px; height: 130px;"
+                     alt="Profile Image">
+                <p class="fw-bold mt-2 mb-0">{{ current_user.username }}</p>
+                <p class="fw-bold mt-2">{{ current_user.role.name|capfirst }}</p>
+            </div>
+        </div> {% endcomment %}
+        <div class="col-9">
+            <div class="card m-2">
+                <div class="card-body">
+                    <table class="table">
+                        <tbody>
+                            <tr>
+                                <td class="w-25">Username:</td>
+                                <td>{{ user.username }}</td>
+                            </tr>
+                            <tr>
+                                <td>Email:</td>
+                                <td>{{ user.email }}</td>
+                            </tr>
+                            <tr>
+                                <td>Date Joined:</td>
+                                <td>{{ user.date_joined }}</td>
+                            </tr>
+                            {% comment %} <tr>
+                                <td>Phone Number:</td>
+                                <td>{{ user.phone_number }}</td>
+                            </tr> {% endcomment %}
+                            <tr>
+                                <td>First Name:</td>
+                                <td>{{ user.first_name }}</td>
+                            </tr>
+                            <tr>
+                                <td>Last Name:</td>
+                                <td>{{ user.last_name }}</td>
+                            </tr>
+                            <tr>
+                                <td>Address:</td>
+                                <td>{{ user.address }}</td>
+                            </tr>
+                            <tr>
+                                <td>Last Login:</td>
+                                <td>{{ user.last_login }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="text-end">
+                        <a href="{% url 'profile_update' user.id %}">
+                            <button type="button" class="btn btn-success btn-sm">Edit Profile</button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+{% endblock content %}

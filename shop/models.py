@@ -69,6 +69,9 @@ class BookingAccessories(models.Model):
         null=True,
         blank=True,
     )
+    username = models.ForeignKey(
+        CustomUser, on_delete=models.CASCADE, null=True, blank=True
+    )
     quantity = models.PositiveIntegerField(
         null=False, blank=False, default=1
     )  # This makes the field required

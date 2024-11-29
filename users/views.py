@@ -6,6 +6,7 @@ from .forms import (
     OfferForm,
     ComplaintForm,
     ComplaintRespondForm,
+    ProfileForm,
 )
 
 # from .models import CustomUser
@@ -25,7 +26,6 @@ from shop.models import (
     Appointment,
     ServiceOffered,
     DogFood,
-    
 )
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -79,7 +79,7 @@ def log_in(request):
 @login_required(login_url="signup")
 def home(request):
     if request.user.is_authenticated:
-        create_notification(request.user, "Welcome Our App")
+        create_notification(request.user, "Welcomhhe Our App")
     context = {"page_title": "Home"}
 
     return render(request, "home.html", context)
@@ -104,37 +104,47 @@ def Shop_owner_dashboard(request):
     if request.user.role == "SHOP OWNER":
         user_count = CustomUser.objects.count()
         role_count = CustomUser.objects.filter(role="SHOP OWNER").count()
-        accessories = Accessories.objects.all().count() # Fetch all accessories
+        accessories = Accessories.objects.all().count()  # Fetch all accessories
 
         context = {
             "page_title": "Shop Owner",
             "user_count": user_count,
             "role_count": role_count,
-            "all_offers":Offers.objects.all().count(),
+            "all_offers": Offers.objects.all().count(),
             "all_accessorie": accessories,
-            "all_foods":DogFood.objects.all().count(),
-            "all_service":ServiceOffered.objects.all().count(),
+            "all_foods": DogFood.objects.all().count(),
+            "all_service": ServiceOffered.objects.all().count(),
             "all_users": BookingService.objects.all().count(),
             "all_accessories": BookingAccessories.objects.all().count(),
             "all_food": BookingFood.objects.all().count(),
             "appointments": Appointment.objects.all().count(),
-            "all_complaints":Complaints.objects.all().count(),
+            "all_complaints": Complaints.objects.all().count(),
+            "counts": Notification.objects.filter(
+                is_read=False, username=request.user
+            ).count(),
         }
         return render(request, "shop_owner_dashboard.html", context)
     return redirect("403")
 
 
-@login_required(login_url="signup")
-def users_dashboard(request):
-    context = {
-        "page_title": "User DashBoard",
-        "all_users": BookingService.objects.all(),
-        "all_accessories": BookingAccessories.objects.all(),
-        "all_foods": BookingFood.objects.all(),
-        "appointments": Appointment.objects.filter(username=request.user),
-    }
+class UserDashboardListview(LoginRequiredMixin, ListView):
+    model = Appointment
+    paginate_by = 3
+    ordering = ["-id"]
+    context_object_name = "appointments"
+    template_name = "users_dashboard.html"
 
-    return render(request, "users_dashboard.html", context)
+    def get_queryset(self):
+        return Appointment.objects.filter(username=self.request.user)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["page_title"] = "User DashBoard"
+        context["counts"] = Notification.objects.filter(
+            is_read=False, username=self.request.user
+        ).count()
+
+        return context
 
 
 class UserListView(LoginRequiredMixin, ListView):
@@ -151,7 +161,12 @@ class UserListView(LoginRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+
         context["page_title"] = "All Registered User"
+        context["counts"] = Notification.objects.filter(
+            is_read=False, username=self.request.user
+        ).count()
+
         return context
 
 
@@ -160,19 +175,28 @@ def add_users(request):
     if request.user.role == "SHOP OWNER":
 
         if request.method == "POST":
-            form = UserRegisterForm(request.POST)
+            form = UserRegisterForm(request.GET)
             if form.is_valid():
                 form.save()
                 messages.success(
                     request, "Registered user successfully", extra_tags="alert-success"
                 )
+                if request.user.is_authenticated:
+                    create_notification(request.user, "Welcomhhe Our App")
                 return redirect("shop_dashboard")
+
             else:
                 for error_list in form.errors.values():
                     for errors in error_list:
                         messages.error(request, errors, extra_tags="alert-danger")
 
-        context = {"page_title": "Register User", "form": UserRegisterForm()}
+        context = {
+            "page_title": "Register User",
+            "form": UserRegisterForm(),
+            "counts": Notification.objects.filter(
+                is_read=False, username=request.user
+            ).count(),
+        }
 
         return render(request, "add_update_users.html", context)
     return redirect("403")
@@ -196,6 +220,9 @@ def update_users(request, pk):
     context = {
         "page_title": "Register User",
         "form": UserRegisterForm(instance=to_update),
+        "counts": Notification.objects.filter(
+            is_read=False, username=request.user
+        ).count(),
     }
 
     return render(request, "add_update_users.html", context)
@@ -219,7 +246,12 @@ def delete_users(request, pk):
 def view_notification(request):
     context = {
         "page_title": "View Notification",
-        "all_notifications": Notification.objects.filter(username=request.user),
+        "all_notifications": Notification.objects.filter(
+            username=request.user
+        ).order_by("-id"),
+        "counts": Notification.objects.filter(
+            is_read=False, username=request.user
+        ).count(),
     }
     return render(request, "notification.html", context)
 
@@ -239,6 +271,9 @@ def view_offers(request):
         "page_title": "All Offers",
         "form": OfferForm(),
         "all_offers": Offers.objects.all().order_by("-id"),
+        "counts": Notification.objects.filter(
+            is_read=False, username=request.user
+        ).count(),
     }
 
     return render(request, "add_view_offers.html", context)
@@ -259,14 +294,27 @@ def add_offers(request):
                 messages.success(
                     request, "Offers Added Successfully", extra_tags="alert-success"
                 )
+                all_user = CustomUser.objects.all()
+                for user in all_user:
+                    create_notification(
+                        user,
+                        " A brand-new offer has just been added. Don't miss out on exclusive deals and discounts. Check it out now!",
+                    )
                 return redirect("shop_dashboard")
+
             else:
 
                 for error_list in form.errors.values():
                     for error in error_list:
                         messages.error(request, error, extra_tags="alert-danger")
 
-        context = {"page_title": "View Offers", "form": form}
+        context = {
+            "page_title": "View Offers",
+            "form": form,
+            "counts": Notification.objects.filter(
+                is_read=False, username=request.user
+            ).count(),
+        }
         return render(request, "add_view_offers.html", context)
     return redirect("403")
 
@@ -300,6 +348,10 @@ class ComplaintListView(LoginRequiredMixin, ListView):
         context = super().get_context_data(**kwargs)
         context["page_title"] = "View Complaints"
         context["all_bookings"] = Complaints.objects.filter(username=self.request.user)
+        context["counts"] = Notification.objects.filter(
+            is_read=False, username=self.request.user
+        ).count()
+
         return context
 
 
@@ -314,12 +366,26 @@ def add_complaints(request):
             messages.success(
                 request, "Complaint Registered Successfully", extra_tags="alert-success"
             )
+            create_notification(request.user, "Complaint Registerd  Successfully")
+            admin_users = CustomUser.objects.filter(role="SHOP OWNER")
+            for admin_user in admin_users:
+                create_notification(
+                    admin_user,
+                    f" {request.user} have registered a complaint check it now",
+                )
+
             return redirect("view_complaints")
         else:
             for error_list in form.errors.values():
                 for errors in error_list:
                     messages.error(request, errors, extra_tags="alert-danger")
-    context = {"page_title": "Register complaint", "form": ComplaintForm}
+    context = {
+        "page_title": "Register complaint",
+        "form": ComplaintForm,
+        "counts": Notification.objects.filter(
+            is_read=False, username=request.user
+        ).count(),
+    }
     return render(request, "add_update_users.html", context)
 
 
@@ -342,6 +408,9 @@ def update_complaints(request, pk):
     context = {
         "page_title": "Updated complaint",
         "form": ComplaintForm(instance=to_update),
+        "counts": Notification.objects.filter(
+            is_read=False, username=request.user
+        ).count(),
     }
     return render(request, "add_update_users.html", context)
 
@@ -358,25 +427,35 @@ def delete_complaints(request, pk):
 
 @login_required(login_url="signup")
 def respond(request, pk):
-    to_update = get_object_or_404(Complaints, id=pk)
-    if request.method == "POST":
-        form = ComplaintRespondForm(request.POST, instance=to_update)
-        if form.is_valid():
-            form.save()
+    if request.user.role == "SHOP OWNER":
+        to_update = get_object_or_404(Complaints, id=pk)
+        notify = to_update.username
+        if request.method == "POST":
+            form = ComplaintRespondForm(request.POST, instance=to_update)
+            if form.is_valid():
+                form.save()
 
-            messages.success(
-                request, "Complaint Updated Successfully", extra_tags="alert-success"
-            )
-            return redirect("shop_dashboard")
-        else:
-            for error_list in form.errors.values():
-                for errors in error_list:
-                    messages.error(request, errors, extra_tags="alert-danger")
-    context = {
-        "page_title": "Complaint Responds",
-        "form": ComplaintRespondForm(instance=to_update),
-    }
-    return render(request, "add_update_users.html", context)
+                messages.success(
+                    request,
+                    "Complaint Updated Successfully",
+                    extra_tags="alert-success",
+                )
+                #
+                create_notification(notify, "Authority respond your complaint")
+                return redirect("shop_dashboard")
+            else:
+                for error_list in form.errors.values():
+                    for errors in error_list:
+                        messages.error(request, errors, extra_tags="alert-danger")
+        context = {
+            "page_title": "Complaint Responds",
+            "form": ComplaintRespondForm(instance=to_update),
+            "counts": Notification.objects.filter(
+                is_read=False, username=request.user
+            ).count(),
+        }
+        return render(request, "add_update_users.html", context)
+    return redirect("403")
 
 
 class AllComplaintListView(LoginRequiredMixin, ListView):
@@ -386,7 +465,52 @@ class AllComplaintListView(LoginRequiredMixin, ListView):
     paginate_by = 6
     ordering = ["-id"]
 
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.role != "SHOP OWNER":
+            return redirect("403")
+        return super().dispatch(request, *args, **kwargs)
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["page_title"] = "All Complaints"
+        context["counts"] = Notification.objects.filter(
+            is_read=False, username=self.request.user
+        ).count()
+
         return context
+
+
+@login_required(login_url="signup")
+def profile(request):
+    context = {
+        "page_title": "Profile",
+        "counts": Notification.objects.filter(
+            is_read=False, username=request.user
+        ).count(),
+    }
+    return render(request, "profile.html", context)
+
+
+@login_required(login_url="signup")
+def profile_update(request, pk):
+    to_update = get_object_or_404(CustomUser, id=pk)
+    if request.method == "POST":
+        form = ProfileForm(request.POST, instance=to_update)
+        if form.is_valid():
+            form.save()
+            messages.success(
+                request, "Profile  Updated SuccessFully", extra_tags="alert-success"
+            )
+            return redirect("profile")
+        else:
+            for error_list in form.errors.values():
+                for errors in error_list:
+                    messages.error(request, errors, extra_tags="alert-danger")
+    context = {
+        "page_title": "Profile Update",
+        "form": ProfileForm(instance=to_update),
+        "counts": Notification.objects.filter(
+            is_read=False, username=request.user
+        ).count(),
+    }
+    return render(request, "add_update_users.html", context)
