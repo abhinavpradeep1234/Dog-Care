@@ -36,6 +36,20 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="col-sm-6 col-xl-3">
+                    <div class="d-flex align-items-center justify-content-between p-4"
+                         style="background-color:yellow;
+                                border-radius: 0.5rem">
+                                <i class="fa-regular fa-calendar-check fa-3x text-primary"></i>
+                                {% comment %} fa-3x text-primary"></i> {% endcomment %}
+                        <div class="ms-3">
+                            <p class="mb-2">All  Doggie Booking</p>
+                            <a class="text-decoration-none text-black"
+                               href="{% url 'view_service_booking' %}">>>> View</a>
+                        </div>
+                    </div>
+                </div>
                 <div class="col-sm-6 col-xl-3">
                     <div class="d-flex align-items-center justify-content-between p-4"
                          style="background-color:lightgray;
@@ -43,7 +57,7 @@
                         <i class="fa fa-paw fa-3x text-primary"></i>
                         <div class="ms-3">
                             <p class="mb-2">Dog Care Essentials</p>
-                            <a class="text-decoration-none text-black" href="{% url 'view_shop' %}">>>View & all Bookings</a>
+                            <a class="text-decoration-none text-black" href="{% url 'view_shop' %}">>>All Doggie Essential</a>
                         </div>
                     </div>
                 </div>
@@ -56,6 +70,17 @@
                             <p class="mb-2">Appointment Bookings</p>
                             <a href="{% url 'view_appointment' %}"
                                class="text-decoration-none text-black">>>View Appointment</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-6 col-xl-3">
+                    <div class="d-flex align-items-center justify-content-between p-4"
+                         style="background-color: #ffcccc;
+                                border-radius: 0.5rem">
+                                <i class="fa-solid  fa-bars-progress fa-3x text-primary"></i>                        <div class="ms-3">
+                            <p class="mb-2">Check up management</p>
+                            <a class="text-decoration-none text-black" href="{% url 'view_checkup_details' %}">>>>View </a>
                         </div>
                     </div>
                 </div>

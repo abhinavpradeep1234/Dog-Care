@@ -23,9 +23,21 @@ urlpatterns = [
     path("delete/Shop/Food/<int:pk>", views.delete_food, name="delete_food"),
     # checkupDoctors
     path(
-        "view/Checkup_details",
-        views.CheckUpDetailsListView.as_view(),
+        "view/checkup",
+        views.DoctorsListView.as_view(),
         name="view_checkup_details",
+    ),
+    # page for admin view all tokens
+    path(
+        "view/Checkup/token",
+        views.TokenListView.as_view(),
+        name="view_tokens",
+    ),
+    # page for  admin view all service token
+    path(
+        "view/token/service",
+        views.TokenServiceListView.as_view(),
+        name="view_service_token",
     ),
     path(
         "add/Doctors/Checkup_details",
@@ -60,24 +72,71 @@ urlpatterns = [
     ),
     # Appointment for Checkup
     # all appointment in admin
-    path("view/Appointment/Booking", views.AppointmentListView.as_view(), name="view_appointment"),
+    path(
+        "view/Appointment/Booking",
+        views.AppointmentListView.as_view(),
+        name="view_appointment",
+    ),
     path("Appointment/Booking", views.booking_appointment, name="booking_appointment"),
+    # service booking Crud
     path(
         "Booking/ServiceOffered/<int:pk>",
         views.booking_service_offered,
         name="booking_service_offered",
     ),
-    # path("update/Booking/Service Offered/<int:pk>", views.update_booking_service_offered, name="update_booking_service_offered"),
-    # path("delete/Booking/Service Offered/<int:pk>", views.delete_booking_service_offered, name="delete_booking_service_offered"),
     path(
-        "view/Booking/Service Offered",
-        views.view_booking_service_offered,
-        name="view_booking_service_offered",
+        "update/Booking/Service Offered/<int:pk>",
+        views.update_booking_service_offered,
+        name="update_booking_service_offered",
     ),
     path(
-        "Booking/Accessories/<int:pk>",
+        "delete/Booking/Service Offered/<int:pk>",
+        views.delete_booking_service_offered,
+        name="delete_booking_service_offered",
+    ),
+    # accessories booking CRUD
+    path(
+        "Booking/accessories/<int:pk>",
         views.booking_accessories,
         name="booking_accessories",
+    ),
+    path(
+        "update/Booking/accessories/<int:pk>",
+        views.update_booking_accessories,
+        name="update_booking_accessories",
+    ),
+    path(
+        "delete/Booking/accessories/<int:pk>",
+        views.delete_booking_accessories,
+        name="delete_booking_accessories",
+    ),
+    # food booking Crud
+    path("Booking/Food/<int:pk>", views.booking_food, name="booking_food"),
+    path(
+        "update/Booking/Service Offered/<int:pk>",
+        views.update_booking_food,
+        name="update_booking_food",
+    ),
+    path(
+        "delete/Booking/Service Offered/<int:pk>",
+        views.delete_booking_food,
+        name="delete_booking_food",
+    ),
+    # admin list for all booking
+    path(
+        "view/Booking/Service Offered",
+        views.BookedServiceListView.as_view(),
+        name="view_service_booking",
+    ),
+    path(
+        "view/Booking/accessories",
+        views.BookedAccessoriesListView.as_view(),
+        name="view_accessories_booking",
+    ),
+    path(
+        "view/Booking/food_products",
+        views.BookedFoodListView.as_view(),
+        name="view_food_booking",
     ),
     # service token
     path(
@@ -98,7 +157,6 @@ urlpatterns = [
     # path("token/view/Service Offered", views.view_token_service_offered, name="view_token_service_offered"),
     # path("Booking/Accessories/<int:pk>", views.booking_accessories, name="booking_accessories"),
     # path("Booking/Accessories/<int:pk>", views.booking_accessories, name="booking_accessories"),
-    path("Booking/Food/<int:pk>", views.booking_food, name="booking_food"),
     # Checkup for user EDIT/DELETE
     # path(
     #     "view/Booking/Appointment/",

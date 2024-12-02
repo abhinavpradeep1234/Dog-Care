@@ -20,7 +20,7 @@
                 <div class="alert {% if not all_notification.is_read %} alert-primary {% else %} alert-dark {% endif %}" role="alert">
                     {{ all_notification.username }} : {{ all_notification.notification }} - {{ all_notification.time }}
 
-                    {% if not all_notification.is_mark %}
+                    {% if not all_notification.is_read %}
                         <a href="{% url 'is_read' all_notification.id %}" class="alert-link">
                             <button type="button" class="btn btn-outline-secondary">Mark as Read</button>
                         </a>

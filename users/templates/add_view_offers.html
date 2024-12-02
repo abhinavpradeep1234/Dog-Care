@@ -64,7 +64,7 @@
                                                 <h6 class="text-dark text-uppercase">Special Offer</h6>
                                                 <h1 class="display-5 text-uppercase text-white mb-0">{{ all_offer.offers }} -- {{ all_offer.time }}</h1>
                                             </div>
-                                            <a href="{% url 'view_shop' %}" class="btn btn-light  btn-sm">Shop Now</a>
+                                            {% comment %} <a href="{% url 'view_shop' %}" class="btn btn-light  btn-sm">Shop Now</a> {% endcomment %}
                                             {% if request.user.role == "SHOP OWNER" %}
                                                 <button type="button"
                                                         class="btn btn-primary btn-danger btn-sm"
