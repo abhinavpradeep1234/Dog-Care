@@ -26,6 +26,7 @@ SECRET_KEY = "django-insecure-xcjnv$nx)3l@(i16lqftn_qrz&_%51feixx6e-t9@e0h92z-*h
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+
 ALLOWED_HOSTS = []
 
 
@@ -76,23 +77,23 @@ WSGI_APPLICATION = "project.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-# DATABASES = {
-#     "default": {
-#         "ENGINE": "django.db.backends.postgresql",
-#         "NAME": 'dog_care',
-#         "HOST":"localhost",
-#         "PASSWORD":"1234",
-#         "PORT":'5433',
-#         "USER":"postgres"
-#     }
-# }
-
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": 'dog_care',
+        "HOST":"localhost",
+        "PASSWORD":"1234",
+        "PORT":'5433',
+        "USER":"postgres"
     }
 }
+
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.sqlite3",
+#         "NAME": BASE_DIR / "db.sqlite3",
+#     }
+# }
 
 
 # Password validation
@@ -148,9 +149,9 @@ EMAIL_HOST = "smtp.gmail.com"
 
 EMAIL_PORT = 587
 
-EMAIL_HOST_USER = "smartpublictoilets@gmail.com"# Your Email
+EMAIL_HOST_USER = " "# Your Email
 
 
-EMAIL_HOST_PASSWORD = "nirx bvfw gwhx bjju"  # your App password
+EMAIL_HOST_PASSWORD = " "  # your App password
 
 EMAIL_USE_TLS = True

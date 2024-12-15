@@ -9,7 +9,6 @@ from django.contrib.auth.models import AbstractUser
 class CustomUser(AbstractUser):
     ROLE = (("SHOP OWNER", "SHOP OWNER"),)
     role = models.CharField(max_length=200, choices=ROLE, blank=True)
-    
 
 
 class Notification(models.Model):

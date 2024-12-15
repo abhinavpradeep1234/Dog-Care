@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block content %}
+    {% load static %}
+    <div class="container  mt-4">
+        <div class="row">
+            <div class="col-md-6 mx-auto">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-center">
+                            <img src="{% static "image/favicon.png" %}"width="100" ;height="100">
+                        </div>
+                        <p>
+                            403 Forbidden error occurs, it means that the server understood the request but refuses to authorize it.You have no right to access the page contact administration
+                            .
+                        </p>
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a href="{% url 'home' %}" class="btn btn-primary btn-sm">Back to home</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

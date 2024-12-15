@@ -9,7 +9,6 @@ class ServiceOffered(models.Model):
     price = models.PositiveIntegerField()
     image = models.ImageField(upload_to="service_offered_image")
 
-
     def __str__(self):
         return self.service_name
 
@@ -59,9 +58,17 @@ class BookingService(models.Model):
     token = models.ForeignKey(
         TokenService, on_delete=models.CASCADE, null=True, blank=True
     )
+    date = models.DateTimeField(auto_now=True, editable=False)
+
+    
 
 
 class BookingAccessories(models.Model):
+    PAYEMENT = (
+        ("COD", "Cash on Delivery"),
+        ("ONLINE", "Online Payment"),
+    )
+
     total_stock = models.ForeignKey(
         Accessories,
         on_delete=models.CASCADE,
@@ -76,9 +83,17 @@ class BookingAccessories(models.Model):
         null=False, blank=False, default=1
     )  # This makes the field required
 
-    accessories_name = models.ForeignKey(Accessories, on_delete=models.CASCADE)
-    price = models.PositiveIntegerField()
+    accessories_name = models.ForeignKey(
+        Accessories, on_delete=models.CASCADE, null=True, blank=True
+    )
+    price = models.PositiveIntegerField(null=True, blank=True)
     total_price = models.PositiveIntegerField(null=True, blank=True)
+    address = models.CharField(max_length=200, null=True, blank=True)
+    email = models.CharField(max_length=200, null=True, blank=True)
+    date = models.DateTimeField(auto_now=True, editable=False)
+    payement_mode = models.CharField(
+        max_length=200, choices=PAYEMENT, null=True, blank=True
+    )
 
     def save(self, *args, **kwargs):
         self.total_price = self.price * self.quantity
@@ -96,6 +111,11 @@ class BookingAccessories(models.Model):
 
 
 class BookingFood(models.Model):
+    PAYEMENT = (
+        ("COD", "Cash on Delivery"),
+        ("ONLINE", "Online Payment"),
+    )
+
     Food_name = models.ForeignKey(DogFood, on_delete=models.CASCADE)
     price = models.PositiveIntegerField()
     quantity = models.PositiveIntegerField(null=False, blank=False, default=1)
@@ -106,6 +126,12 @@ class BookingFood(models.Model):
         CustomUser, on_delete=models.CASCADE, blank=True, null=True
     )
     total_price = models.PositiveIntegerField(blank=True, null=True)
+    address = models.CharField(max_length=200, null=True, blank=True)
+    email = models.CharField(max_length=200, null=True, blank=True)
+    date = models.DateTimeField(auto_now=True, editable=False)
+    payement_mode = models.CharField(
+        max_length=200, choices=PAYEMENT, null=True, blank=True
+    )
 
     def save(self, *args, **kwargs):
         self.total_price = self.price * self.quantity
@@ -115,14 +141,10 @@ class BookingFood(models.Model):
 
             if self.total_stock.total_stock < self.quantity:
                 raise ValidationError(
-                        "Quantity must be less than or equal to available stock"
-                    )
-            
+                    "Quantity must be less than or equal to available stock"
+                )
+
         return super().save(*args, **kwargs)
-    
-    
-    
-    
 
 
 # Checkup Details DOctors Token And booking Appointment
@@ -158,14 +180,14 @@ class TokenAvailability(models.Model):
 
 
 class Appointment(models.Model):
-    #AVAILABE FIELD added for status
+    # AVAILABE FIELD added for status
     STATUS = (
         ("confirm booking", "Confirm Booking"),
         (
             "finished",
             "Finished",
         ),
-        ("pending","Pending")
+        ("pending", "Pending"),
     )
     username = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     doctor_name = models.ForeignKey(Doctors, on_delete=models.CASCADE)

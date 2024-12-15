@@ -6,15 +6,16 @@
                 <li class="breadcrumb-item">
                     <a href="{% url 'home' %}" class="text-decoration-none text-black"><i class="bi bi-house-door-fill"></i></a>
                 </li>
-                <li class="breadcrumb-item">
-                    <a href="{% url 'shop_dashboard' %}"
-                       class="text-decoration-none text-black">Owner Dashboard</a>
-                </li>
+                {% if request.user.role == "SHOP OWNER" %}
+                    <li class="breadcrumb-item">
+                        <a href="{% url 'shop_dashboard' %}"
+                           class="text-decoration-none text-black">Owner Dashboard</a>
+                    </li>
+                {% endif %}
                 <li class="breadcrumb-item active"aria-current="page">{{ page_title }}</li>
             </ol>
         </nav>
     </div>
-
     <div class="container">
         <div class="row">
             <div class="col-md-6 mx-auto">
@@ -33,12 +34,10 @@
         </div>
     </div>
     {% for all_token in all_tokens %}
-   
         <button type="button"
                 class="btn btn-primary"
                 data-bs-toggle="modal"
                 data-bs-target="#staticBackdrop">View Service Tokens</button>
-     
         <div class="modal fade"
              id="staticBackdrop"
              data-bs-backdrop="static"

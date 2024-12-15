@@ -113,12 +113,12 @@ urlpatterns = [
     # food booking Crud
     path("Booking/Food/<int:pk>", views.booking_food, name="booking_food"),
     path(
-        "update/Booking/Service Offered/<int:pk>",
+        "update/Booking/food_items/<int:pk>",
         views.update_booking_food,
         name="update_booking_food",
     ),
     path(
-        "delete/Booking/Service Offered/<int:pk>",
+        "delete/Booking/food_items/<int:pk>",
         views.delete_booking_food,
         name="delete_booking_food",
     ),
@@ -163,6 +163,7 @@ urlpatterns = [
     #     views.BookingAppointment.as_view(),
     #     name="user_booking_appointment",
     # ),
+    #booking Appointment 
     path(
         "edit/Appointment/Booking/<int:pk>",
         views.update_appointment,

@@ -11,7 +11,7 @@ from .forms import (
 
 # from .models import CustomUser
 from django.contrib import messages
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import get_object_or_404
 from users.utils import create_notification
 from users.models import Notification, Offers, Complaints, CustomUser
@@ -86,6 +86,8 @@ def home(request):
 
 
 def log_out(request):
+    logout(request)
+
     messages.success(request, "Logged Out", extra_tags="alert-success")
 
     return redirect("signup")
@@ -135,7 +137,7 @@ class UserDashboardListview(LoginRequiredMixin, ListView):
     template_name = "users_dashboard.html"
 
     def get_queryset(self):
-        return Appointment.objects.filter(username=self.request.user)
+        return Appointment.objects.filter(username=self.request.user).order_by("-id")
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -334,7 +336,7 @@ def delete_offers(request, pk):
 @login_required(login_url="signup")
 def unauthorized(request):
     context = {"page_title": "403"}
-    return render(request, "404.html", context)
+    return render(request, "403.html", context)
 
 
 class ComplaintListView(LoginRequiredMixin, ListView):

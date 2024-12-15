@@ -15,7 +15,7 @@
         </nav>
     </div>
     {% if all_accessories %}
-        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 ms-2">
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 ms-2 mt-4">
             {% for accessories in all_accessories %}
                 <div class="col">
                     <div class="card h-100">
@@ -27,54 +27,64 @@
                                 <strong>Accessories Name:</strong> {{ accessories.accessories_name }}
                             </p>
                             <p>
+                                <strong>Username:</strong>{{ accessories.username }}
+                            </p>
+                            <p>
                                 <strong>Quantity:</strong>{{ accessories.quantity }}
                             </p>
                             <p>
                                 <strong>Price:</strong>  {{ accessories.total_price }}
                             </p>
                             <p>
-                                <strong>date:</strong> {{ company.mission }}
+                                <strong>Booked Date:</strong> {{ accessories.date }}
+                            </p>
+                            <p>
+                                <strong>Address:</strong> {{ accessories.address }}
+                            </p>
+                            <p>
+                                <strong>Email:</strong> {{ accessories.email }}
                             </p>
                         </div>
                         <div class="card-footer text-center">
-                            {% comment %} <a href="{% url 'update_company_details' company.id %}"> {% endcomment %}
-                            <button type="submit" class="btn btn-primary btn-sm">Update</button>
-                        </a>
-                        <button type="button"
-                                class="btn btn-danger btn-sm"
-                                data-bs-toggle="modal"
-                                data-bs-target="#deleteModal{{ company.id }}">Delete</button>
-                    </div>
-                </div>
-            </div>
-            <!-- Modal for Delete Confirmation -->
-            <div class="modal fade"
-                 id="deleteModal{{ company.id }}"
-                 tabindex="-1"
-                 aria-labelledby="deleteModal{{ company.id }}"
-                 aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h1 class="modal-title fs-5" id="deleteModal{{ company.id }}">Delete</h1>
+                            <a href="{% url 'update_booking_accessories' accessories.id %}">
+                                <button type="submit" class="btn btn-primary btn-sm">Edit Details</button>
+                            </a>
                             <button type="button"
-                                    class="btn-close"
-                                    data-bs-dismiss="modal"
-                                    aria-label="Close"></button>
+                                    class="btn btn-danger btn-sm"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#deleteModal{{ accessories.id }}">Cancel</button>
                         </div>
-                        <div class="modal-body">Are you sure you want to delete?</div>
-                        <div class="modal-footer">
-                            {% comment %} <a href="{% url 'delete_company_details' company.id %}"> {% endcomment %}
-                            <button type="button" class="btn btn-danger">Delete</button>
-                        </a>
                     </div>
                 </div>
-            </div>
+                <!-- Modal for Delete Confirmation -->
+                <div class="modal fade"
+                     id="deleteModal{{ accessories.id }}"
+                     tabindex="-1"
+                     aria-labelledby="deleteModal{{ accessories.id }}"
+                     aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="deleteModal{{ accessories.id }}">cancel Booking</h1>
+                                <button type="button"
+                                        class="btn-close"
+                                        data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">Are you sure you want to Cancel?</div>
+                            <div class="modal-footer">
+                                <a href="{% url 'delete_booking_accessories' accessories.id %}">
+                                    <button type="button" class="btn btn-danger btn-sm">cancel</button>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
         </div>
-    {% endfor %}
-</div>
-{% include "pagination.html" %}
+    </br>
+    {% include "pagination.html" %}
 {% else %}
-<div class="alert alert-success text-center mt-2" role="alert">There is no Accessories booked yet</div>
+    <div class="alert alert-success text-center mt-2" role="alert">There is no Accessories booked yet</div>
 {% endif %}
 {% endblock content %}

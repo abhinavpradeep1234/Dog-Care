@@ -24,14 +24,17 @@ from shop.models import (
 
 from shop.forms import (
     BookServiceOfferedForm,
+    UpdateBookServiceOfferedForm,
     BookAccessoriesForm,
     BookFoodForm,
+    UpdateBookFoodForm,
     ServiceOfferedForm,
     AccessoriesForm,
     DogFoodForm,
     DoctorsForm,
     TokenForm,
     BookingAppointmentForm,
+    UpdateBookAccessoriesForm,
     ServiceTokenForm,
     AppointmentStatusForm,
 )
@@ -1063,21 +1066,6 @@ def update_appointment(request, pk):
     return render(request, "add_update.html", context)
 
 
-# @login_required(login_url="signup")
-# def delete_appointment(request, pk):
-#     to_delete = get_object_or_404(Appointment, id=pk)
-#     token_availability=to_delete.Token
-
-#     to_delete.delete()
-#     token_availability.token_available=True
-#     token_availability.save()
-
-#     messages.success(
-#         request, "Appointment Cancel SuccessFully", extra_tags="alert-success"
-#     )
-#     return redirect("dashboard")
-
-
 @login_required(login_url="signup")
 def delete_appointment(request, pk):
     # Get the appointment instance or return a 404
@@ -1158,6 +1146,7 @@ class BookedService(LoginRequiredMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["page_title"] = "Booked Service"
+        # context["all_user"] = BookingService.objects.all().order_by("-id")
         context["counts"] = Notification.objects.filter(
             is_read=False, username=self.request.user
         ).count()
@@ -1173,11 +1162,14 @@ class BookedAccessories(LoginRequiredMixin, ListView):
     ordering = ["-id"]
 
     def get_queryset(self):
-        return BookingAccessories.objects.filter(username=self.request.user)
+        return BookingAccessories.objects.filter(username=self.request.user).order_by(
+            "-id"
+        )
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["page_title"] = "Booked Accessories"
+
         context["counts"] = Notification.objects.filter(
             is_read=False, username=self.request.user
         ).count()
@@ -1193,7 +1185,7 @@ class BookedFood(LoginRequiredMixin, ListView):
     ordering = ["-id"]
 
     def get_queryset(self):
-        return BookingFood.objects.filter(username=self.request.user)
+        return BookingFood.objects.filter(username=self.request.user).order_by("-id")
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -1209,7 +1201,7 @@ class BookedFood(LoginRequiredMixin, ListView):
 def update_booking_service_offered(request, pk):
     to_update = get_object_or_404(BookingService, id=pk)
     if request.method == "POST":
-        form = BookServiceOfferedForm(request.POST, instance=to_update)
+        form = UpdateBookServiceOfferedForm(request.POST, instance=to_update)
         if form.is_valid():
             form.save()
             messages.success(
@@ -1222,7 +1214,7 @@ def update_booking_service_offered(request, pk):
 
     context = {
         "page_title": "Update",
-        "form": BookServiceOfferedForm(instance=to_update),
+        "form": UpdateBookServiceOfferedForm(instance=to_update),
         "counts": Notification.objects.filter(
             is_read=False, username=request.user
         ).count(),
@@ -1238,15 +1230,15 @@ def delete_booking_service_offered(request, pk):
     token_avilability.available = True
 
     token_avilability.save()
-    messages.success(request, "Deleted Successfully", extra_tags="alert-success")
+    messages.success(request, "Booking Cancel Successfully", extra_tags="alert-success")
     return redirect("dashboard")
 
 
 @login_required(login_url="signup")
 def update_booking_accessories(request, pk):
-    to_update = get_object_or_404(BookAccessoriesForm, id=pk)
+    to_update = get_object_or_404(BookingAccessories, id=pk)
     if request.method == "POST":
-        form = BookAccessoriesForm(request.POST, instance=to_update)
+        form = UpdateBookAccessoriesForm(request.POST, instance=to_update)
         if form.is_valid():
             form.save()
             messages.success(
@@ -1258,8 +1250,8 @@ def update_booking_accessories(request, pk):
                 messages.error(request, errors, extra_tags="alert-danger")
 
     context = {
-        "page_title": "Update",
-        "form": BookAccessoriesForm(instance=to_update),
+        "page_title": "Edit Booking",
+        "form": UpdateBookAccessoriesForm(instance=to_update),
         "counts": Notification.objects.filter(
             is_read=False, username=request.user
         ).count(),
@@ -1269,19 +1261,19 @@ def update_booking_accessories(request, pk):
 
 @login_required(login_url="signup")
 def delete_booking_accessories(request, pk):
-    to_delete = get_object_or_404(BookingFood, id=pk)
+    to_delete = get_object_or_404(BookingAccessories, id=pk)
     to_delete.delete()
     messages.success(
-        request, "Accessories Cancel Successfully", extra_tags="alert-sucess"
+        request, "Accessories Booking Cancel Successfully", extra_tags="alert-success"
     )
     return redirect("dashboard")
 
 
 @login_required(login_url="signup")
 def update_booking_food(request, pk):
-    to_update = get_object_or_404(BookFoodForm, id=pk)
+    to_update = get_object_or_404(BookingFood, id=pk)
     if request.method == "POST":
-        form = BookFoodForm(request.POST, instance=to_update)
+        form = UpdateBookFoodForm(request.POST, instance=to_update)
         if form.is_valid():
             form.save()
             messages.success(
@@ -1294,7 +1286,7 @@ def update_booking_food(request, pk):
 
     context = {
         "page_title": "Update",
-        "form": BookFoodForm(instance=to_update),
+        "form": UpdateBookFoodForm(instance=to_update),
         "counts": Notification.objects.filter(
             is_read=False, username=request.user
         ).count(),
@@ -1307,6 +1299,6 @@ def delete_booking_food(request, pk):
     to_delete = get_object_or_404(BookingFood, id=pk)
     to_delete.delete()
     messages.success(
-        request, "Food Product Cancel Successfully", extra_tags="alert-success"
+        request, "Booking Food item Cancel Successfully", extra_tags="alert-success"
     )
     return redirect("dashboard")

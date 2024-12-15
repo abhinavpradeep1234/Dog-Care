@@ -6,18 +6,17 @@
                 <li class="breadcrumb-item">
                     <a href="{% url 'home' %}" class="text-decoration-none text-black"><i class="bi bi-house-door-fill"></i></a>
                 </li>
-               
                 <li class="breadcrumb-item active" aria-current="page">{{ page_title }}</li>
             </ol>
         </nav>
     </div>
     <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4 me-4">
-      <a href="{% url 'booked_service' %}" class="btn btn-outline-success btn-sm">BookedService</a>
-      <a href="{% url 'booked_food' %}" class="btn btn-outline-success btn-sm">Booked Food Products</a>
-  
-  
-      <a href="{% url 'booked_accessories' %}" class="btn btn-outline-success btn-sm">Booked Accessories</a>
-  </div>
+        <a href="{% url 'booked_service' %}"
+           class="btn btn-outline-success btn-sm">BookedService</a>
+        <a href="{% url 'booked_food' %}" class="btn btn-outline-success btn-sm">Booked Food Products</a>
+        <a href="{% url 'booked_accessories' %}"
+           class="btn btn-outline-success btn-sm">Booked Accessories</a>
+    </div>
     {% if appointments %}
         <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 ms-2 mt-4">
             {% for appointment in appointments %}
@@ -28,7 +27,7 @@
                         </div> {% endcomment %}
                         <div class="card-body">
                             <p>
-                                <strong>Username:</strong> {{ appointment.username}}
+                                <strong>Username:</strong> {{ appointment.username }}
                             </p>
                             <p>
                                 <strong>Token Details:</strong>{{ appointment.Token }}
@@ -39,47 +38,51 @@
                             <p>
                                 <strong>Date:</strong> {{ appointment.appointment_date }}
                             </p>
+
+                            <p>
+                                <strong>Status:</strong> {{ appointment.status }}
+                            </p>
                         </div>
                         <div class="card-footer text-center">
-                            {% comment %} <a href="{% url 'update_company_details' company.id %}"> {% endcomment %}
-                            <button type="submit" class="btn btn-primary btn-sm">Update</button>
-                        </a>
-                        <button type="button"
-                                class="btn btn-danger btn-sm"
-                                data-bs-toggle="modal"
-                                data-bs-target="#deleteModal{{ company.id }}">Delete</button>
-                    </div>
-                </div>
-            </div>
-            <!-- Modal for Delete Confirmation -->
-            <div class="modal fade"
-                 id="deleteModal{{ company.id }}"
-                 tabindex="-1"
-                 aria-labelledby="deleteModal{{ company.id }}"
-                 aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h1 class="modal-title fs-5" id="deleteModal{{ company.id }}">Delete</h1>
+                            <a href="{% url 'update_appointment' appointment.id %}">
+                                <button type="submit" class="btn btn-primary btn-sm">Edit Details</button>
+                            </a>
                             <button type="button"
-                                    class="btn-close"
-                                    data-bs-dismiss="modal"
-                                    aria-label="Close"></button>
+                                    class="btn btn-danger btn-sm"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#deleteModal{{ appointment.id }}">Cancel</button>
                         </div>
-                        <div class="modal-body">Are you sure you want to delete?</div>
-                        <div class="modal-footer">
-                            {% comment %} <a href="{% url 'delete_company_details' company.id %}"> {% endcomment %}
-                            <button type="button" class="btn btn-danger">Delete</button>
-                        </a>
                     </div>
                 </div>
-            </div>
+                <!-- Modal for Delete Confirmation -->
+                <div class="modal fade"
+                     id="deleteModal{{ appointment.id }}"
+                     tabindex="-1"
+                     aria-labelledby="deleteModal{{ appointment.id }}"
+                     aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="deleteModal{{ appointment.id }}">Cancel</h1>
+                                <button type="button"
+                                        class="btn-close"
+                                        data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">Are you sure you want to Cancel?</div>
+                            <div class="modal-footer">
+                                <a href="{% url 'delete_appointment' appointment.id %}">
+                                    <button type="button" class="btn btn-danger">Cancel</button>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
         </div>
-    {% endfor %}
-</div>
-{% include "pagination.html" %}
+    </br>
+    {% include "pagination.html" %}
 {% else %}
-<div class="alert alert-success text-center mt-2" role="alert">There is no Appointment Booked yet</div>
+    <div class="alert alert-success text-center mt-2" role="alert">There is no Appointment Booked yet</div>
 {% endif %}
 {% endblock content %}
-
