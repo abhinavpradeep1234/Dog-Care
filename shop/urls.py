@@ -188,4 +188,5 @@ urlpatterns = [
         name="booked_accessories",
     ),
     path("booking/food", views.BookedFood.as_view(), name="booked_food"),
+    path("proceed-to-pay", views.razorpaycheck, name="proceed_to_pay"),
 ]

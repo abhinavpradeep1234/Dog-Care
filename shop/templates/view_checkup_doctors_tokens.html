@@ -35,6 +35,7 @@
                             <tr class="text-center">
                                 <th>Doctor's Name</th>
                                 <th>Specialized</th>
+                                <th>Availability</th>
                                 <th colspan=2>Actions</th>
                             </tr>
                         </thead>
@@ -43,6 +44,7 @@
                                 <tr class="text-center">
                                     <td>{{ all_doctor.doctor_name }}</td>
                                     <td>{{ all_doctor.specialized }}</td>
+                                    <td>{{ all_doctor.availability|yesno:"Yes,No" }}</td>
                                     <td>
                                         <a href="{% url 'update_doctors_checkup_details' all_doctor.id %}">
                                             <button type="submit" class="btn btn-success btn-sm">Update</button>

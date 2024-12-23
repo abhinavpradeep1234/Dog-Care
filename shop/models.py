@@ -92,7 +92,7 @@ class BookingAccessories(models.Model):
     email = models.CharField(max_length=200, null=True, blank=True)
     date = models.DateTimeField(auto_now=True, editable=False)
     payement_mode = models.CharField(
-        max_length=200, choices=PAYEMENT, null=True, blank=True
+        max_length=200, choices=PAYEMENT, null=True, blank=True,help_text="NB : If you choose online payment, after completing the payment you need to click  confirm button otherwise order will not be placed"
     )
 
     def save(self, *args, **kwargs):
@@ -130,7 +130,7 @@ class BookingFood(models.Model):
     email = models.CharField(max_length=200, null=True, blank=True)
     date = models.DateTimeField(auto_now=True, editable=False)
     payement_mode = models.CharField(
-        max_length=200, choices=PAYEMENT, null=True, blank=True
+        max_length=200, choices=PAYEMENT, null=True, blank=True ,help_text="NB : If you choose online payment, after completing the payment you need to click  'confirm booking' button to confirm order otherwise order will not be placed"
     )
 
     def save(self, *args, **kwargs):
@@ -151,6 +151,7 @@ class BookingFood(models.Model):
 class Doctors(models.Model):
     doctor_name = models.CharField(max_length=200, unique=True, blank=True)
     specialized = models.CharField(max_length=200, blank=True)
+    availability=models.BooleanField(default=True)
 
     def __str__(self):
         return self.doctor_name

@@ -14,12 +14,13 @@ from shop.models import (
     Accessories,
     DogFood,
     Doctors,
-    Token,
     Appointment,
     BookingService,
     BookingAccessories,
     BookingFood,
     TokenService,
+    Token,
+    TokenAvailability,
 )
 
 from shop.forms import (
@@ -692,28 +693,6 @@ class TokenServiceListView(LoginRequiredMixin, ListView):
         return context
 
 
-# class CheckUpDetailsListView(ListView):
-#     template_name="view_checkup_doctors_tokens.html"
-#     paginate_by=4
-#     ordering=['id']
-#     def get_context_data(self, **kwargs):
-#         context = super().get_context_data(**kwargs)
-#         context["all_doctors"] = "View Checkup Details"
-#         context["page_title"] = Doctors.objects.all(),
-#         context["all_tokens"] = Token.objects.all(),
-#         context["all_tokens_services"] = TokenService.objects.all(),
-#         return context
-
-# def view_checkup_details(request):
-#     context = {
-#         "page_title": "View Checkup Details",
-#         "all_doctors": Doctors.objects.all(),
-#         "all_tokens": Token.objects.all(),
-#         "all_tokens_services": TokenService.objects.all(),
-#     }
-#     return render(request, "view_checkup_doctors_tokens.html", context)
-
-
 @login_required(login_url="signup")
 def add_doctors_checkup_details(request):
     if request.user.role == "SHOP OWNER":
@@ -890,18 +869,15 @@ class AppointmentListView(LoginRequiredMixin, ListView):
         return context
 
 
-from django.utils import timezone
-from datetime import timedelta
-from django.shortcuts import render, redirect
-from django.contrib import messages
-from .models import Token, TokenAvailability, Appointment
-from shop.forms import BookingAppointmentForm
-
-
 @login_required(login_url="signup")
 def booking_appointment(request):
     today = timezone.localtime().date()
     form = BookingAppointmentForm()
+    available = Doctors.objects.filter(availability=True)
+    if not available:
+        messages.error(
+            request, "Sorry no doctors available", extra_tags="alert-danger"
+        )
 
     if request.method == "POST":
         form = BookingAppointmentForm(request.POST)
@@ -971,74 +947,6 @@ def booking_appointment(request):
         ).count(),
     }
     return render(request, "add_update.html", context)
-
-
-# def booking_appointment(request):
-#     today = timezone.localtime().date()
-#     form = BookingAppointmentForm()
-
-#     # Check if there are available tokens
-#     available_tokens = Token.objects.filter(token_available=True)
-
-#     if not available_tokens:
-#         messages.error(
-#             request, "No tokens are currentlydd available.", extra_tags="alert-danger"
-#         )
-
-#     if request.method == "POST":
-#         form = BookingAppointmentForm(request.POST)
-#         if form.is_valid():
-#             token = form.cleaned_data["Token"]
-#             appointment_date = form.cleaned_data["appointment_date"]
-
-#             # Check if the selected token can be used for the given date
-#             if appointment_date >= today and appointment_date <= (
-#                 today + timedelta(days=2)
-#             ):
-#                 appointment = form.save(commit=False)
-#                 appointment.username = request.user
-#                 appointment.save()
-
-#                 # Mark the token as unavailable for that specific day
-#                 token.token_available = False
-#                 token.save()
-
-#                 messages.success(
-#                     request,
-#                     "Your Appointment Booking Successful",
-#                     extra_tags="alert-success",
-#                 )
-#                 return redirect("dashboard")
-#             else:
-#                 messages.error(
-#                     request,
-#                     "You can only book this token for today or the next two days.",
-#                     extra_tags="alert-danger",
-#                 )
-#         else:
-
-#             for error_list in form.errors.values():
-#                 for error in error_list:
-#                     messages.error(request, error, extra_tags="alert-danger")
-
-#     context = {"page_title": "Appointment Booking", "form": form}
-#     return render(request, "add_update_service.html", context)
-
-
-# def view_token_service_offered(request):
-#     context={"all_tokens":TokenService.objects.all()}
-#     return render (request,"view_checkup_doctors_tokens.html",context)
-
-
-# class BookingAppointment(LoginRequiredMixin, ListView):
-#     model = Appointment
-#     template_name = "user_checkup_booking.html"
-#     extra_context = {"page_title": "Booked Appointment"}
-
-#     def get_context_data(self, **kwargs):
-#         context = super().get_context_data(**kwargs)
-#         context["appointments"] = Appointment.objects.filter(username=self.request.user)
-#         return context
 
 
 @login_required(login_url="signup")
@@ -1302,3 +1210,15 @@ def delete_booking_food(request, pk):
         request, "Booking Food item Cancel Successfully", extra_tags="alert-success"
     )
     return redirect("dashboard")
+
+@login_required(login_url="signup")
+
+
+
+@login_required(login_url="signup")
+def razorpaycheck(request):
+    accesories =BookingFood.objects.filter(user=request.user)
+    total_price = 0
+    for accessory in accesories:
+        total_price += accessory.quantity * accessory.price
+    return JsonResponse({"total_price": total_price})

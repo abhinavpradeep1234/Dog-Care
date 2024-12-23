@@ -6,7 +6,7 @@
                 <li class="breadcrumb-item">
                     <a href="{% url 'home' %}" class="text-decoration-none text-black"><i class="bi bi-house-door-fill"></i></a>
                 </li>
-                <li class="breadcrumb-item active"aria-current="page">{{ page_title }}</li>
+                <li class="breadcrumb-item active" aria-current="page">{{ page_title }}</li>
             </ol>
         </nav>
     </div>
@@ -27,84 +27,188 @@
                                     <label>Quantity:</label>
                                     {{ form.quantity }}
                                     <br>
-
                                     <br>
                                     <label>Address:</label>
                                     {{ form.address }}
                                     <br>
-
                                     <br>
-                                    <label>email:</label>
+                                    <label>Email:</label>
                                     {{ form.email }}
                                     <br>
                                     <br>
-                                    <label>Payement Mode:</label>
-                                    {{ form.payement_mode }}
+                                    <label>Payment Mode:</label>
+                                    <select name="payement_mode" class="form-control" id="id_payement_mode">
+                                        <option value="" selected>---------</option>
+                                        <option value="COD">Cash on Delivery</option>
+                                        <option value="ONLINE">Online Payment</option>
+                                    </select>
+                                    <small class="form-text text-danger">{{ form.payement_mode.help_text }}</small>
                                     <br>
                                     <p class="text-center text-success">
                                         Total price: <span id="total_price">0</span>
                                     </p>
-                                    <p class="text-center text-danger">
-                                        Total Stock: <span id="total_stock`">{{ all_accessorie.total_stock }}</span>
-                                    </p>
-                                {% endif %}
-                                {% if food %}
-                                    <label>Food Product:</label>
-                                    {{ form.Food_name }}
-                                    <br>
-                                    <label>Price:</label>
-                                    {{ form.price }}
-                                    <br>
-                                    <label>Quantity:</label>
-                                    {{ form.quantity }}
-                                    <br>
-
-                                    <label>Address:</label>
-                                    {{ form.address }}
-                                    <br>
-
-                                    <br>
-                                    <label>email:</label>
-                                    {{ form.email }}
-                                    <br>
-                                    <br>
-                                    <label>Payement Mode:</label>
-                                    {{ form.payement_mode }}
-                                    <br>
                                     <p class="text-center text-success">
-                                        Total price: <span id="total_price">0</span>
+                                        Total Stock: <span id="total_stock">{{ all_accessorie.total_stock }}</span>
                                     </p>
-                                    <p class="text-center text-danger">
-                                        <p class="text-center">Total Stock : {{ all_food.total_stock|default:"0" }}</p>
-                                    </p>
-                                {% endif %}
-                                {% comment %} <h5 class="class text-center text-danger">Total Stock : {{all_accessorie.total_stock}}</h5> {% endcomment %}
-                                {% csrf_token %}
-                                <button type="submit" class="btn btn-primary">{{ page_title }}</button>
+                                </div>
+                            {% endif %}
+                            {% if food %}
+                                <label>Food Product:</label>
+                                {{ form.Food_name }}
+                                <br>
+                                <label>Price:</label>
+                                {{ form.price }}
+                                <br>
+                                <label>Quantity:</label>
+                                {{ form.quantity }}
+                                <br>
+                                <label>Address:</label>
+                                {{ form.address }}
+                                <br>
+                                <br>
+                                <label>Email:</label>
+                                {{ form.email }}
+                                <br>
+                                <br>
+                                <label>Payment Mode:</label>
+                                <select name="payement_mode" class="form-control" id="id_payement_mode">
+                                    <option value="" selected>---------</option>
+                                    <option value="COD">Cash on Delivery</option>
+                                    <option value="ONLINE">Online Payment</option>
+                                </select>
+                                <small class="form-text text-danger">{{ form.payement_mode.help_text }}</small>
+                                <br>
+                                <div class="d-flex justify-content-center mt-4">
+                                    <div class="d-inline-flex gap-1">
+                                        <p class="text-center text-success">
+                                            Total price: <span id="total_price">0</span>
+                                        </p>
+                                        |
+                                        <p class="text-center text-success">Total Stock : {{ all_food.total_stock|default:"0" }}</p>
+                                    </div>
+                                </div>
+                            {% endif %}
+                            {% csrf_token %}
+                            <div class="d-flex justify-content-center mt-4">
+                                <button type="submit" class="btn btn-primary btn-sm ">Confirm Booking</button>
                             </form>
+                            <!-- Pay button that will only appear if payment mode is 'ONLINE' -->
+                            <button id="rzp-button1"
+                                    class="btn btn-success btn-sm ms-2"
+                                    style="display:none">Pay With Razorpay</button>
                         </div>
+                        <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+                        <script>
+                        // Function to calculate total price
+                        function calculateTotalPrice() {
+                            let price = parseFloat(document.getElementById('id_price').value) || 0;
+                            let quantity = parseFloat(document.getElementById('id_quantity').value) || 0;
+
+                            // Calculate the total price
+                            let totalPrice = price * quantity;
+
+                            // Update the total price display, fallback to 0 if NaN
+                            document.getElementById('total_price').textContent = isNaN(totalPrice) ? "0" : totalPrice.toFixed(2);
+
+                            // Update Razorpay amount
+                            return totalPrice;
+                        }
+
+                        // Event listeners for input fields to update the total price
+                        document.getElementById('id_price').addEventListener('input', calculateTotalPrice);
+                        document.getElementById('id_quantity').addEventListener('input', calculateTotalPrice);
+
+                        // Function to show/hide the Pay button based on Payment Mode
+                        function togglePayButton() {
+                            let paymentMode = document.getElementById('id_payement_mode').value;
+                            let payButton = document.getElementById('rzp-button1');
+
+                            if (paymentMode === 'ONLINE') {
+                                payButton.style.display = 'block';  // Show Pay button
+                            } else {
+                                payButton.style.display = 'none';   // Hide Pay button
+                            }
+                        }
+
+                        // Trigger the toggle function on page load and when the payment mode changes
+                        document.getElementById('id_payement_mode').addEventListener('change', togglePayButton);
+
+                        // Initial check when the page loads
+                        togglePayButton();
+
+                        // Razorpay payment options with dynamic amount
+                        document.getElementById('rzp-button1').onclick = function(e) {
+                            // Get the dynamic total price
+                            let totalPrice = calculateTotalPrice();
+
+                            // Validate all required fields
+                            let isValid = true;
+                            let requiredFields = [
+                                'id_price', 'id_quantity', 'id_address', 'id_email', 'id_payement_mode'
+                            ];
+
+                            // Loop through each field and check if it has a value
+                            for (let fieldId of requiredFields) {
+                                let field = document.getElementById(fieldId);
+                                if (!field) {
+                                    // If the field does not exist, continue with next iteration
+                                    continue;
+                                }
+
+                                // Check for empty input fields or invalid values
+                                if (field.value.trim() === "") {
+                                    isValid = false;
+                                    break;
+                                }
+
+                                // Special case for dropdown fields (like payment_mode) if applicable
+                                if (field.tagName === "SELECT" && field.value === "") {
+                                    isValid = false;
+                                    break;
+                                }
+                            }
+
+                            // Show alert if the form is not valid
+                            if (!isValid) {
+                                Swal.fire({
+                                    title: "Warning",
+                                    text: "All fields are required",
+                                    icon: "warning",
+                                  });
+                                 e.preventDefault();
+                                return;
+                            }
+
+                            // Razorpay payment options with dynamic amount
+                            var options = {
+                                "key": "rzp_test_bExXeTSGdRlunx", // Enter the Key ID generated from the Dashboard
+                                "amount": (totalPrice * 100).toFixed(0), // Amount in paise (multiplying by 100)
+                                "currency": "INR",
+                                "name": "HEY DOGGY!!@Authority", // Your business name
+                                "description": "HEY DOGGY!!",
+                                "image": "https://example.com/your_logo",
+                                "order_id": "{{ payment.id }}", // This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+                                "prefill": {
+                                    "name": "Gaurav Kumar", // Your customer's name
+                                    "email": "gaurav.kumar@example.com",
+                                    "contact": "9000090000" // Provide the customer's phone number for better conversion rates
+                                },
+                                "notes": {
+                                    "address": "Razorpay Corporate Office"
+                                },
+                                "theme": {
+                                    "color": "red"
+                                }
+                            };
+
+                            var rzp1 = new Razorpay(options);
+                            rzp1.open();
+                            e.preventDefault();
+                        }
+                        </script>
                     </div>
                 </div>
             </div>
-        </div> 
-           </div>
-        <script>
-      // Function to calculate total price
-function calculateTotalPrice() {
-    // Get the price and quantity values from input fields
-    let price = parseFloat(document.getElementById('id_price').value) || 0;
-    let quantity = parseFloat(document.getElementById('id_quantity').value) || 0;
-
-    // Calculate the total price
-    let totalPrice = price * quantity;
-
-    // Update the total price display, fallback to 0 if NaN
-    document.getElementById('total_price').textContent = isNaN(totalPrice) ? "0" : totalPrice.toFixed(2);
-}
-
-// Event listeners for input fields to update the total price
-document.getElementById('id_price').addEventListener('input', calculateTotalPrice);
-document.getElementById('id_quantity').addEventListener('input', calculateTotalPrice);
-
-        </script>
-    {% endblock content %}
+        </div>
+    </div>
+{% endblock content %}

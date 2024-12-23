@@ -144,13 +144,13 @@ class UpdateBookFoodForm(forms.ModelForm):
 class DoctorsForm(forms.ModelForm):
     class Meta:
         model = Doctors
-        fields = ["doctor_name", "specialized"]
+        fields = "__all__"
         widgets = {
             "doctor_name": forms.TextInput(attrs={"class": "form-control"}),
             "specialized": forms.TextInput(attrs={"class": "form-control"}),
         }
 
-
+    
 # checkup Token
 
 
@@ -162,6 +162,7 @@ class TokenForm(forms.ModelForm):
             "Token": forms.TextInput(attrs={"class": "form-control"}),
             "token_available": forms.CheckboxInput(attrs={"class": "form-c"}),
         }
+
 
 
 class BookingAppointmentForm(forms.ModelForm):
@@ -195,6 +196,11 @@ class BookingAppointmentForm(forms.ModelForm):
         # self.fields["Token"].queryset = token_visibility
         # self.fields["Token"].queryset = token_date_visibility
         # self.field["Token"].queryset = token_visibility
+
+        doctors_available = Doctors.objects.filter(availability=True)
+        self.fields["doctor_name"].queryset = doctors_available
+
+
         for field in self.fields:
             self.fields[field].widget.attrs.update({"class": "form-control"})
 
