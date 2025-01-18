@@ -60,7 +60,9 @@ def log_in(request):
             try:
                 user = CustomUser.objects.get(username=username)
             except CustomUser.DoesNotExist:
-                messages.error(request, "Username Doesn't Exists")
+                messages.error(
+                    request, "Username Doesn't Exists", extra_tags="alert-success"
+                )
             user = authenticate(username=username, password=password)
             if user is not None:
                 login(request, user)
@@ -78,8 +80,7 @@ def log_in(request):
 
 @login_required(login_url="signup")
 def home(request):
-    if request.user.is_authenticated:
-        create_notification(request.user, "Welcomhhe Our App")
+
     context = {"page_title": "Home"}
 
     return render(request, "home.html", context)
@@ -312,12 +313,12 @@ def add_offers(request):
 
         context = {
             "page_title": "View Offers",
-            "form": form,
+            "form": OfferForm(),
             "counts": Notification.objects.filter(
                 is_read=False, username=request.user
             ).count(),
         }
-        return render(request, "add_view_offers.html", context)
+        return render(request, "list_offers.html", context)
     return redirect("403")
 
 
@@ -516,3 +517,23 @@ def profile_update(request, pk):
         ).count(),
     }
     return render(request, "add_update_users.html", context)
+
+
+# admin View
+class AllOffersListView(LoginRequiredMixin, ListView):
+    model = Offers
+    context_object_name = "all_offers"
+    template_name = "list_offers.html"
+    paginate_by = 6
+    ordering = ["-id"]
+    form = OfferForm()
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["page_title"] = "All Offers"
+        context["form"] = OfferForm
+        context["counts"] = Notification.objects.filter(
+            is_read=False, username=self.request.user
+        ).count()
+
+        return context

@@ -12,14 +12,21 @@ from shop.models import (
 )
 from django.utils import timezone
 from datetime import timedelta
+from phonenumber_field.formfields import SplitPhoneNumberField
+from phonenumber_field.widgets import PhoneNumberPrefixWidget
 
-
+from phonenumber_field.formfields import PhoneNumberField
 # service,Food,Accessories create,Update
 class ServiceOfferedForm(forms.ModelForm):
+    phone=PhoneNumberField(region="CA")
+
+    
+
 
     class Meta:
         model = ServiceOffered
         fields = ["service_name", "price", "image"]
+
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -44,11 +51,11 @@ class DogFoodForm(forms.ModelForm):
     class Meta:
         model = DogFood
         fields = ["Food_name", "price", "image", "total_stock"]
-        widgets = {
-            "Food_name": forms.TextInput(attrs={"class": "form-control"}),
-            "price": forms.TextInput(attrs={"class": "form-control"}),
-            "image": forms.FileInput(attrs={"class": "form-control"}),
-        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields:
+            self.fields[field].widget.attrs.update({"class": "form-control"})
 
 
 # booking service,Food,Accessories create,Update
@@ -72,6 +79,7 @@ class BookServiceOfferedForm(forms.ModelForm):
 
         # Limit available tokens
         self.fields["token"].queryset = TokenService.objects.filter(available=True)
+        self.fields["token"].required = True
 
 
 class UpdateBookServiceOfferedForm(forms.ModelForm):
@@ -95,10 +103,20 @@ class BookAccessoriesForm(forms.ModelForm):
         model = BookingAccessories
         fields = ["price", "quantity", "email", "address", "payement_mode"]
 
+        widgets = {
+            "price": forms.TextInput(
+                attrs={"readonly": "readonly", "class": "form-control"}
+            ),
+        }
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for field in self.fields:
             self.fields[field].widget.attrs.update({"class": "form-control"})
+            self.fields["quantity"].required = True
+            self.fields["email"].required = True
+            self.fields["address"].required = True
+            self.fields["payement_mode"].required = True
 
 
 class UpdateBookAccessoriesForm(forms.ModelForm):
@@ -121,11 +139,21 @@ class BookFoodForm(forms.ModelForm):
     class Meta:
         model = BookingFood
         fields = ["price", "quantity", "email", "address", "payement_mode"]
+        widgets = {
+            "price": forms.TextInput(
+                attrs={"readonly": "readonly", "class": "form-control"}
+            ),
+        }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for field in self.fields:
             self.fields[field].widget.attrs.update({"class": "form-control"})
+
+        self.fields["quantity"].required = True
+        self.fields["email"].required = True
+        self.fields["address"].required = True
+        self.fields["payement_mode"].required = True
 
 
 class UpdateBookFoodForm(forms.ModelForm):
@@ -150,7 +178,7 @@ class DoctorsForm(forms.ModelForm):
             "specialized": forms.TextInput(attrs={"class": "form-control"}),
         }
 
-    
+
 # checkup Token
 
 
@@ -162,7 +190,6 @@ class TokenForm(forms.ModelForm):
             "Token": forms.TextInput(attrs={"class": "form-control"}),
             "token_available": forms.CheckboxInput(attrs={"class": "form-c"}),
         }
-
 
 
 class BookingAppointmentForm(forms.ModelForm):
@@ -200,7 +227,6 @@ class BookingAppointmentForm(forms.ModelForm):
         doctors_available = Doctors.objects.filter(availability=True)
         self.fields["doctor_name"].queryset = doctors_available
 
-
         for field in self.fields:
             self.fields[field].widget.attrs.update({"class": "form-control"})
 
@@ -217,6 +243,30 @@ class ServiceTokenForm(forms.ModelForm):
     class Meta:
         model = TokenService
         fields = ["token", "available"]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        for field in self.fields:
+            self.fields[field].widget.attrs.update({"class": "form-control"})
+
+
+class StatusUpdateAccessoriesForm(forms.ModelForm):
+    class Meta:
+        model = BookingAccessories
+        fields = ["status"]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        for field in self.fields:
+            self.fields[field].widget.attrs.update({"class": "form-control"})
+
+
+class StatusUpdateFoodForm(forms.ModelForm):
+    class Meta:
+        model = BookingFood
+        fields = ["status"]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

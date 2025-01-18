@@ -33,8 +33,8 @@
                             <th>Accessories</th>
                             <th>Quantity</th>
                             <th>Price</th>
-                            <th>tPrice</th>
-                            <th>Actions</th>
+                            <th>Total Price</th>
+                            <th>Status</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -45,37 +45,9 @@
                                 <td>{{ all_accessorie.quantity }}</td>
                                 <td>{{ all_accessorie.price }}</td>
                                 <td>{{ all_accessorie.total_price }}</td>
-                                <td>
-                                    <button type="button"
-                                            class="btn btn-sm"
-                                            data-bs-toggle="modal"
-                                            data-bs-target="#deleteModal{{ all_user.id }}">
-                                        <i class="bi bi-trash3"></i>
-                                    </button>
-                                </td>
+                                <td>{{ all_accessorie.status }}</td>
                             </tr>
                             <!-- Delete Modal -->
-                            <div class="modal fade"
-                                 id="deleteModal{{ all_user.id }}"
-                                 tabindex="-1"
-                                 aria-labelledby="deleteModalLabel{{ all_user.id }}"
-                                 aria-hidden="true">
-                                <div class="modal-dialog modal-dialog-centered">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h1 class="modal-title fs-5" id="deleteModalLabel{{ all_user.id }}">Delete</h1>
-                                            <button type="button"
-                                                    class="btn-close"
-                                                    data-bs-dismiss="modal"
-                                                    aria-label="Close"></button>
-                                        </div>
-                                        <div class="modal-body">Are you sure you want to delete this user?</div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-danger">Confirm Delete</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
                         {% endfor %}
                     </tbody>
                 </table>

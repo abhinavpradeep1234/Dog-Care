@@ -2,10 +2,11 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from datetime import timedelta
 from django.utils import timezone
-from django.views.generic import ListView
+from django.views.generic import ListView, UpdateView
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from users.models import CustomUser, Notification
+from django.urls import reverse_lazy
 
 from users.utils import create_notification
 from django.core.exceptions import ValidationError
@@ -38,6 +39,8 @@ from shop.forms import (
     UpdateBookAccessoriesForm,
     ServiceTokenForm,
     AppointmentStatusForm,
+    StatusUpdateAccessoriesForm,
+    StatusUpdateFoodForm,
 )
 
 from django.shortcuts import get_object_or_404
@@ -423,6 +426,11 @@ def booking_service_offered(request, pk):
 @login_required(login_url="signup")
 def booking_accessories(request, pk):
     all_accessorie = get_object_or_404(Accessories, id=pk)
+    if all_accessorie.total_stock < 1:
+
+        messages.error(
+            request, "Sorry, not enough stock available.", extra_tags="alert-danger"
+        )
 
     if request.method == "POST":
 
@@ -494,6 +502,12 @@ def booking_accessories(request, pk):
 @login_required(login_url="signup")
 def booking_food(request, pk):
     all_food = get_object_or_404(DogFood, id=pk)
+    if all_food.total_stock < 1:
+
+        messages.error(
+            request, "Sorry, not enough stock available.", extra_tags="alert-danger"
+        )
+
     if request.method == "POST":
         form = BookFoodForm(request.POST)
         if form.is_valid():
@@ -853,14 +867,14 @@ class AppointmentListView(LoginRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         today = timezone.now().date()
-        tommorow = today + timedelta(days=1)
+        tomorrow = today + timedelta(days=1)
 
         context = super().get_context_data(**kwargs)
         context["page_title"] = "All Appointment"
         context["checkups"] = Appointment.objects.filter(status="finished").count()
         context["count"] = Appointment.objects.filter(appointment_date=today).count()
-        context["counts"] = Appointment.objects.filter(
-            appointment_date=tommorow
+        context["tommorow_counts"] = Appointment.objects.filter(
+            appointment_date=tomorrow
         ).count()
         context["counts"] = Notification.objects.filter(
             is_read=False, username=self.request.user
@@ -875,9 +889,7 @@ def booking_appointment(request):
     form = BookingAppointmentForm()
     available = Doctors.objects.filter(availability=True)
     if not available:
-        messages.error(
-            request, "Sorry no doctors available", extra_tags="alert-danger"
-        )
+        messages.error(request, "Sorry no doctors available", extra_tags="alert-danger")
 
     if request.method == "POST":
         form = BookingAppointmentForm(request.POST)
@@ -1211,14 +1223,137 @@ def delete_booking_food(request, pk):
     )
     return redirect("dashboard")
 
-@login_required(login_url="signup")
+
+class StatusBookedFood(LoginRequiredMixin, UpdateView):
+    model = BookingFood
+    success_url = reverse_lazy("dashboard")
+    template_name = "add_update.html"
+    form_class = StatusUpdateFoodForm
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["page_title"] = "Update Status "
+        return context
+
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.role != "SHOP OWNER":
+            return redirect("403")
+        return super().dispatch(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        booking_food = form.instance
+
+        user_to_notify = booking_food.username  # Assuming `user` is a field in your BookingAccessories model
+        
+        create_notification(user_to_notify, f"Your booking status has been updated  {booking_food.status}.")
+
+        
+        
+        
+
+       
+           
+        messages.success(
+            self.request,
+            "Booking Status Updated ",
+            extra_tags="alert-success",
+        )
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        for error_list in form.errors.values():
+            for errors in error_list:
+                messages.error(self.request, errors, extra_tags="alert-danger")
+        return super().form_invalid(form)
 
 
+class StatusBookedAccessories(LoginRequiredMixin, UpdateView):
+    model = BookingAccessories
+    success_url = reverse_lazy("dashboard")
+    template_name = "add_update.html"
+    form_class = StatusUpdateAccessoriesForm
 
-@login_required(login_url="signup")
-def razorpaycheck(request):
-    accesories =BookingFood.objects.filter(user=request.user)
-    total_price = 0
-    for accessory in accesories:
-        total_price += accessory.quantity * accessory.price
-    return JsonResponse({"total_price": total_price})
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["page_title"] = "Update Status "
+        return context
+
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.role != "SHOP OWNER":
+            return redirect("403")
+        return super().dispatch(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        booking_accessory = form.instance
+
+        user_to_notify = booking_accessory.username  # Assuming `user` is a field in your BookingAccessories model
+        
+        create_notification(user_to_notify, f"Your booking status has been updated  {booking_accessory.status}.")
+
+        messages.success(
+            self.request,
+            "Booking Status Updated ",
+            extra_tags="alert-success",
+        )
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        for error_list in form.errors.values():
+            for errors in error_list:
+                messages.error(self.request, errors, extra_tags="alert-danger")
+        return super().form_invalid(form)
+
+
+class StatusBookedAccessoriesListView(LoginRequiredMixin, ListView):
+    model = BookingAccessories
+    paginate_by = 6
+    ordering = ["-id"]
+    template_name = "delivery_status_accessories.html"
+    context_object_name = "all_accessories"
+
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.role != "SHOP OWNER":
+            return redirect("403")
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["page_title"] = "Accessories Booking Status"
+
+        context["counts"] = Notification.objects.filter(
+            is_read=False, username=self.request.user
+        ).count()
+        return context
+    
+    def get_queryset(self):
+        return BookingAccessories.objects.filter(
+            status="not delivered"
+        )
+
+
+class StatusBookedFoodListView(LoginRequiredMixin, ListView):
+    model = BookingFood
+    paginate_by = 6
+    ordering = ["-id"]
+    template_name = "delivery_status_food.html"
+    context_object_name = "all_foods"
+
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.role != "SHOP OWNER":
+            return redirect("403")
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["page_title"] = "Food Product Booking Status"
+
+        context["counts"] = Notification.objects.filter(
+            is_read=False, username=self.request.user
+        ).count()
+        return context
+    
+    def get_queryset(self):
+        return BookingFood.objects.filter(
+            status="not delivered"
+        )
+

@@ -44,12 +44,17 @@
                                     </select>
                                     <small class="form-text text-danger">{{ form.payement_mode.help_text }}</small>
                                     <br>
+                                    <div class="d-flex justify-content-center mt-4">
+                                        <div class="d-inline-flex gap-1">
                                     <p class="text-center text-success">
                                         Total price: <span id="total_price">0</span>
                                     </p>
+                                |
                                     <p class="text-center text-success">
                                         Total Stock: <span id="total_stock">{{ all_accessorie.total_stock }}</span>
                                     </p>
+                                </div>
+                            </div>
                                 </div>
                             {% endif %}
                             {% if food %}

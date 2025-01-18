@@ -41,7 +41,12 @@
                             <p>
                                 <strong>Email:</strong> {{ food.email }}
                             </p>
+                            <p>
+                                <strong>Status:</strong> {{ food.status }}
+                            </p>
                         </div>
+                        {% if food.status == "not delivered"%}
+
                         <div class="card-footer text-center">
                             <a href="{% url 'update_booking_food' food.id %}">
                                 <button type="submit" class="btn btn-primary btn-sm">Edit Details</button>
@@ -50,6 +55,7 @@
                                     class="btn btn-danger btn-sm"
                                     data-bs-toggle="modal"
                                     data-bs-target="#deleteModal{{ food.id }}">Cancel</button>
+                                    {% endif %}
                         </div>
                     </div>
                 </div>

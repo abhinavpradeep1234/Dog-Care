@@ -68,4 +68,7 @@ urlpatterns = [
         auth_views.PasswordResetCompleteView.as_view(),
         name="password_reset_complete",
     ),
+    #admin view offers edit delete
+    path("offers", views.AllOffersListView.as_view(), name="all_offers"),
+
 ]

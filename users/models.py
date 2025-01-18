@@ -31,3 +31,4 @@ class Complaints(models.Model):
     reported_date = models.DateTimeField(auto_now=True, editable=False)
     report = models.CharField(max_length=300, null=True, blank=True)
     responds = models.CharField(max_length=300, null=True, blank=True)
+    email=models.EmailField(null=True, blank=True)

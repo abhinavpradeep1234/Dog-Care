@@ -81,7 +81,7 @@ class OfferForm(forms.ModelForm):
 class ComplaintForm(forms.ModelForm):
     class Meta:
         model = Complaints
-        fields = ["report"]
+        fields = ["report","email"]
         widgets = {"report": forms.TextInput(attrs={"class": "form-control"})}
 
 

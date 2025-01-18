@@ -44,8 +44,13 @@
                             <p>
                                 <strong>Email:</strong> {{ accessories.email }}
                             </p>
+                            <p>
+                                <strong>Status:</strong> {{ accessories.status }}
+                            </p>
                         </div>
                         <div class="card-footer text-center">
+                            {% if accessories.status  == "not delivered"%}
+
                             <a href="{% url 'update_booking_accessories' accessories.id %}">
                                 <button type="submit" class="btn btn-primary btn-sm">Edit Details</button>
                             </a>
@@ -53,6 +58,7 @@
                                     class="btn btn-danger btn-sm"
                                     data-bs-toggle="modal"
                                     data-bs-target="#deleteModal{{ accessories.id }}">Cancel</button>
+                                    {% endif%}
                         </div>
                     </div>
                 </div>

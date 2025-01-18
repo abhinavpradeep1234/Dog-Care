@@ -163,7 +163,7 @@ urlpatterns = [
     #     views.BookingAppointment.as_view(),
     #     name="user_booking_appointment",
     # ),
-    #booking Appointment 
+    # booking Appointment
     path(
         "edit/Appointment/Booking/<int:pk>",
         views.update_appointment,
@@ -188,5 +188,38 @@ urlpatterns = [
         name="booked_accessories",
     ),
     path("booking/food", views.BookedFood.as_view(), name="booked_food"),
-    path("proceed-to-pay", views.razorpaycheck, name="proceed_to_pay"),
+    # status
+    path(
+        "booking/status/food/<int:pk>",
+        views.StatusBookedFood.as_view(),
+        name="status_booked_food",
+    ),
+    path(
+        "booking/status/accessories/<int:pk>",
+        views.StatusBookedAccessories.as_view(),
+        name="status_booked_accessories",
+    ),
+
+
+
+
+
+
+    
+    # list status
+    path(
+        "booking/status/food/<int:pk>",
+        views.StatusBookedFood.as_view(),
+        name="status_booked_food",
+    ),
+    path(
+        "booking/status/accessories/",
+        views.StatusBookedAccessoriesListView.as_view(),
+        name="list_booked_accessories",
+    ),
+    path(
+        "booking/status/food/",
+        views.StatusBookedFoodListView.as_view(),
+        name="list_booked_food",
+    ),
 ]

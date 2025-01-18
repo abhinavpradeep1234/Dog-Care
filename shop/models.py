@@ -1,13 +1,15 @@
 from django.db import models
 from users.models import CustomUser
 from django.core.exceptions import ValidationError
-
+from phonenumber_field.modelfields import PhoneNumberField  # Use this for models
 
 # Doggy Essentials
 class ServiceOffered(models.Model):
     service_name = models.CharField(max_length=300)
     price = models.PositiveIntegerField()
     image = models.ImageField(upload_to="service_offered_image")
+    phone=PhoneNumberField(blank=True)
+
 
     def __str__(self):
         return self.service_name
@@ -56,14 +58,17 @@ class BookingService(models.Model):
         CustomUser, on_delete=models.CASCADE, null=True, blank=True
     )
     token = models.ForeignKey(
-        TokenService, on_delete=models.CASCADE, null=True, blank=True
+        TokenService,
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        help_text="NB : Choose your Token based on Your service",
     )
     date = models.DateTimeField(auto_now=True, editable=False)
 
-    
-
 
 class BookingAccessories(models.Model):
+    STATUS = (("delivered", "Delivered"), ("not delivered", "Not Delivered"))
     PAYEMENT = (
         ("COD", "Cash on Delivery"),
         ("ONLINE", "Online Payment"),
@@ -80,7 +85,7 @@ class BookingAccessories(models.Model):
         CustomUser, on_delete=models.CASCADE, null=True, blank=True
     )
     quantity = models.PositiveIntegerField(
-        null=False, blank=False, default=1
+        null=False, blank=False
     )  # This makes the field required
 
     accessories_name = models.ForeignKey(
@@ -92,8 +97,13 @@ class BookingAccessories(models.Model):
     email = models.CharField(max_length=200, null=True, blank=True)
     date = models.DateTimeField(auto_now=True, editable=False)
     payement_mode = models.CharField(
-        max_length=200, choices=PAYEMENT, null=True, blank=True,help_text="NB : If you choose online payment, after completing the payment you need to click  confirm button otherwise order will not be placed"
+        max_length=200,
+        choices=PAYEMENT,
+        null=True,
+        blank=True,
+        help_text="NB : If you choose online payment, after completing the payment you need to click  confirm button otherwise order will not be placed",
     )
+    status = models.CharField(max_length=200, choices=STATUS, null=True, blank=True,default="not delivered")
 
     def save(self, *args, **kwargs):
         self.total_price = self.price * self.quantity
@@ -111,6 +121,8 @@ class BookingAccessories(models.Model):
 
 
 class BookingFood(models.Model):
+    STATUS = (("delivered", "Delivered"), ("not delivered", "Not Delivered"))
+
     PAYEMENT = (
         ("COD", "Cash on Delivery"),
         ("ONLINE", "Online Payment"),
@@ -118,7 +130,7 @@ class BookingFood(models.Model):
 
     Food_name = models.ForeignKey(DogFood, on_delete=models.CASCADE)
     price = models.PositiveIntegerField()
-    quantity = models.PositiveIntegerField(null=False, blank=False, default=1)
+    quantity = models.PositiveIntegerField(null=False, blank=False)
     total_stock = models.ForeignKey(
         DogFood, on_delete=models.CASCADE, related_name="stocks", null=True, blank=True
     )
@@ -129,8 +141,14 @@ class BookingFood(models.Model):
     address = models.CharField(max_length=200, null=True, blank=True)
     email = models.CharField(max_length=200, null=True, blank=True)
     date = models.DateTimeField(auto_now=True, editable=False)
+    status = models.CharField(max_length=200, choices=STATUS, null=True, blank=True,default="not delivered")
+
     payement_mode = models.CharField(
-        max_length=200, choices=PAYEMENT, null=True, blank=True ,help_text="NB : If you choose online payment, after completing the payment you need to click  'confirm booking' button to confirm order otherwise order will not be placed"
+        max_length=200,
+        choices=PAYEMENT,
+        null=True,
+        blank=True,
+        help_text="NB : If you choose online payment, after completing the payment you need to click  'confirm booking' button to confirm order otherwise order will not be placed",
     )
 
     def save(self, *args, **kwargs):
@@ -151,7 +169,7 @@ class BookingFood(models.Model):
 class Doctors(models.Model):
     doctor_name = models.CharField(max_length=200, unique=True, blank=True)
     specialized = models.CharField(max_length=200, blank=True)
-    availability=models.BooleanField(default=True)
+    availability = models.BooleanField(default=True)
 
     def __str__(self):
         return self.doctor_name

@@ -1,16 +1,11 @@
 {% extends "base.html" %}
 {% block content %}
     {% if request.user.role == "SHOP OWNER" %}
-        {% comment %} <div class="container">
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb fs-4">
-            <li class="breadcrumb-item">
-                <a href="{% url 'home' %}" class="text-decoration-none text-black"><i class="bi bi-house-door-fill"></i></a>
-            </li>
-            <li class="breadcrumb-item active" aria-current="page">Owner Dashboard</li>
-        </ol>
-    </nav>
-        </div> {% endcomment %}
+        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+            <a class="btn btn-primary btn-sm"
+               href="{% url 'list_booked_accessories' %}"
+               role="button">Delivery Status</a>
+        </div>
         <div class="container-fluid pt-2 px-4">
             <div class="row g-4">
                 <div class="col-sm-6 col-xl-3">
@@ -36,13 +31,12 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="col-sm-6 col-xl-3">
                     <div class="d-flex align-items-center justify-content-between p-4"
                          style="background-color:yellow;
                                 border-radius: 0.5rem">
-                                <i class="fa-regular fa-calendar-check fa-3x text-primary"></i>
-                                {% comment %} fa-3x text-primary"></i> {% endcomment %}
+                        <i class="fa-regular fa-calendar-check fa-3x text-primary"></i>
+                        {% comment %} fa-3x text-primary"></i> {% endcomment %}
                         <div class="ms-3">
                             <p class="mb-2">All  Doggie Booking</p>
                             <a class="text-decoration-none text-black"
@@ -73,14 +67,15 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="col-sm-6 col-xl-3">
                     <div class="d-flex align-items-center justify-content-between p-4"
                          style="background-color: #ffcccc;
                                 border-radius: 0.5rem">
-                                <i class="fa-solid  fa-bars-progress fa-3x text-primary"></i>                        <div class="ms-3">
+                        <i class="fa-solid  fa-bars-progress fa-3x text-primary"></i>
+                        <div class="ms-3">
                             <p class="mb-2">Check up management</p>
-                            <a class="text-decoration-none text-black" href="{% url 'view_checkup_details' %}">>>>View </a>
+                            <a class="text-decoration-none text-black"
+                               href="{% url 'view_checkup_details' %}">>>>View</a>
                         </div>
                     </div>
                 </div>
@@ -91,21 +86,10 @@
                         <i class="fa fa-solid fa-bullhorn fa-3x text-primary"></i>
                         <div class="ms-3">
                             <p class="mb-2">Offers</p>
-                            <a href="{% url 'view_offers' %}"
-                               class="text-decoration-none text-black">>>View Offers</a>
+                            <a href="{% url 'all_offers' %}" class="text-decoration-none text-black">>>View Offers</a>
                         </div>
                     </div>
                 </div>
-                {% comment %} <div class="col-sm-6 col-xl-3">
-            <div class="d-flex align-items-center justify-content-between p-4" style="background-color: lightgreen; border-radius: 0.5rem;">
-                <i class="fa fa-chart-pie fa-3x text-primary"></i>
-                <div class="ms-3">
-                    <p class="mb-2">Total Revenue</p>
-                    <h6 class="mb-0">$1234</h6>
-                </div>
-            </div>
-        </div>
-                </div> {% endcomment %}
             </div>
             <div class="d-flex justify-content-center me-4 ms-4 mt-2 ">
                 <canvas id="myChart" width="950" height="290"></canvas>
